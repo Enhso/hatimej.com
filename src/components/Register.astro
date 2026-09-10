@@ -1,0 +1,238 @@
+---
+import { accession, numeral, type Entry } from "../lib/catalog";
+
+interface Props {
+    entries: Entry[];
+    heading: string;
+    /** Printed under the heading. One line. */
+    gloss?: string;
+}
+
+const { entries, heading, gloss } = Astro.props;
+---
+
+<section class="register" aria-labelledby="register-heading">
+    <header class="banner">
+        <h2 class="signage" id="register-heading">{heading}</h2>
+        {gloss && <p class="gloss">{gloss}</p>}
+    </header>
+
+    {
+        entries.length === 0 ? (
+            <p class="empty">This drawer holds no records yet.</p>
+        ) : (
+            <ol class="cards">
+                {entries.map((entry) => (
+                    <li
+                        class="card filed"
+                        data-class={entry.klass.id}
+                        data-ref={entry.ref}
+                    >
+                        <div class="rail">
+                            <a class="call" href={entry.href}>
+                                {entry.callNumber}
+                            </a>
+                        </div>
+
+                        <div class="body">
+                            <h3 class="title">
+                                <a href={entry.href}>{entry.title}</a>
+                            </h3>
+
+                            <p class="statement">
+                                {entry.klass.label}. — {accession(entry.date)}.
+                                {entry.placeholder && <span class="prov"> — Provisional.</span>}
+                            </p>
+
+                            {entry.summary && <p class="summary">{entry.summary}</p>}
+
+                            <p class="tracings">
+                                <span class="tracings-label signage">Tracings</span>
+                                {entry.tracings.length === 0 ? (
+                                    <span class="tracings-none">none recorded</span>
+                                ) : (
+                                    entry.tracings.map((tracing, index) => (
+                                        <a
+                                            class:list={[
+                                                "tracing",
+                                                { annotated: tracing.note !== undefined },
+                                            ]}
+                                            href={tracing.target.href}
+                                            data-class={tracing.target.klass.id}
+                                            data-target-ref={tracing.target.ref}
+                                            title={tracing.note ?? tracing.target.title}
+                                            aria-label={`${tracing.target.callNumber}, ${tracing.target.title}, ${tracing.target.klass.label}`}
+                                        >
+                                            <span class="tracing-numeral">{numeral(index)}.</span>
+                                            <span class="call">{tracing.target.callNumber}</span>
+                                        </a>
+                                    ))
+                                )}
+                            </p>
+                        </div>
+                    </li>
+                ))}
+            </ol>
+        )
+    }
+</section>
+
+<style>
+    .register {
+        padding-block: calc(var(--u) * 4.8) 0;
+    }
+
+    .banner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: last baseline;
+        justify-content: space-between;
+        gap: calc(var(--u) * 1.2) calc(var(--u) * 3.2);
+        padding-block-end: calc(var(--u) * 1.2);
+        border-block-end: var(--rule-heavy);
+    }
+
+    h2 {
+        margin: 0;
+        font-size: clamp(1.25rem, 3.2vw, 1.75rem);
+        font-weight: 800;
+        letter-spacing: -0.005em;
+        line-height: 1;
+    }
+
+    .gloss {
+        margin: 0;
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+        max-width: 46ch;
+    }
+
+    .empty {
+        margin: calc(var(--u) * 3.2) 0 0;
+        color: var(--ink-soft);
+    }
+
+    .cards {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .card {
+        padding-block: calc(var(--u) * 2.4);
+        border-block-end: var(--rule-hair);
+    }
+
+    .rail .call {
+        font-size: 0.8125rem;
+        text-decoration: none;
+    }
+
+    .rail .call:hover {
+        border-block-end: 1px solid currentcolor;
+    }
+
+    .title {
+        margin: 0;
+        font-family: var(--face-signage);
+        font-weight: 600;
+        font-size: 1.0625rem;
+        line-height: calc(var(--u) * 2.4);
+        letter-spacing: -0.008em;
+        max-width: 44ch;
+    }
+
+    .title a {
+        text-decoration: none;
+        border-block-end: 1px solid transparent;
+    }
+
+    .title a:hover,
+    .title a:focus-visible {
+        border-block-end-color: var(--ribbon);
+    }
+
+    .statement {
+        margin: calc(var(--u) * 0.6) 0 0;
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+    }
+
+    .prov {
+        color: var(--ribbon);
+    }
+
+    .summary {
+        margin: calc(var(--u) * 1.2) 0 0;
+        font-family: var(--face-read);
+        font-size: 0.9375rem;
+        line-height: calc(var(--u) * 2.4);
+        color: var(--ink);
+        max-width: 58ch;
+    }
+
+    /* The tracings line always prints, empty or not. The catalog does not
+       pretend to a completeness it lacks. */
+    .tracings {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.6) calc(var(--u) * 1.6);
+        margin: calc(var(--u) * 1.6) 0 0;
+        padding-block-start: calc(var(--u) * 0.8);
+        border-block-start: var(--rule-hair);
+    }
+
+    .tracings-label {
+        font-size: 0.5625rem;
+        color: var(--ink-soft);
+    }
+
+    .tracings-none {
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+    }
+
+    .tracing {
+        display: inline-flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.5);
+        font-size: 0.6875rem;
+        text-decoration: none;
+        padding-block-end: 1px;
+        border-block-end: 1px solid var(--ribbon);
+    }
+
+    .tracing.annotated {
+        border-block-end-width: 3px;
+    }
+
+    .tracing-numeral {
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+    }
+
+    .tracing:hover,
+    .tracing:focus-visible {
+        background: var(--stock-sunk);
+    }
+
+    /* Pulled state: the selected card holds its ink, everything else drops to
+       infrastructure. */
+    :global([data-pulled]) .card:not([data-lit]) .title a,
+    :global([data-pulled]) .card:not([data-lit]) .summary {
+        color: var(--ink-soft);
+    }
+
+    :global([data-pulled]) .card:not([data-lit]) .tracing {
+        border-block-end-color: var(--line);
+    }
+
+    .card[data-lit="source"] {
+        background: var(--stock-lit);
+    }
+
+    .card[data-lit="target"] .rail .call {
+        border-block-end: 2px solid currentcolor;
+    }
+</style>

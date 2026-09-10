@@ -1,0 +1,256 @@
+---
+import { CLASSES } from "../lib/classes";
+import { SITE } from "../lib/site";
+import type { Entry } from "../lib/catalog";
+
+interface Props {
+    entries: Entry[];
+}
+
+const { entries } = Astro.props;
+const here = Astro.url.pathname;
+const drawer = here.split("/")[1] ?? "";
+---
+
+<header class="head">
+    <div class="head-inner">
+        <a class="mark signage" href="/" aria-label={`${SITE.name}, catalog front`}>
+            <span class="mark-name">{SITE.name}</span>
+            <span class="mark-word">Catalog</span>
+        </a>
+
+        <nav class="tabs" aria-label="Drawers">
+            {
+                CLASSES.map((klass) => (
+                    <a
+                        class="tab signage"
+                        data-class={klass.id}
+                        href={`/${klass.id}`}
+                        aria-label={`${klass.code}, ${klass.heading}`}
+                        aria-current={drawer === klass.id ? "page" : undefined}
+                    >
+                        <span class="tab-code">{klass.code}</span>
+                        <span class="tab-heading">{klass.heading}</span>
+                    </a>
+                ))
+            }
+            <a
+                class="tab signage"
+                href="/cv"
+                aria-label="A, authority record"
+                aria-current={drawer === "cv" ? "page" : undefined}
+            >
+                <span class="tab-code">A</span>
+                <span class="tab-heading">Authority</span>
+            </a>
+        </nav>
+
+        <div class="tools">
+            <form class="lookup" role="search" aria-label="Find by call number">
+                <label class="signage" for="call-lookup">Call no.</label>
+                <input
+                    id="call-lookup"
+                    name="call"
+                    type="text"
+                    list="call-numbers"
+                    autocomplete="off"
+                    spellcheck="false"
+                    inputmode="text"
+                    maxlength="8"
+                    placeholder="R101"
+                    size={7}
+                />
+                <datalist id="call-numbers">
+                    {
+                        entries.map((entry) => (
+                            <option
+                                value={entry.callNumber}
+                                label={entry.title}
+                                data-href={entry.href}
+                            />
+                        ))
+                    }
+                </datalist>
+            </form>
+            <button class="stat signage" type="button" data-theme-toggle aria-pressed="false">
+                <span data-theme-label>Negative</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<style>
+    .head {
+        border-block-end: var(--rule-heavy);
+        background: var(--stock);
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 5;
+    }
+
+    .head-inner {
+        max-width: 78rem;
+        margin-inline: auto;
+        padding-inline: var(--page-side);
+        padding-block: calc(var(--u) * 1.2);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: calc(var(--u) * 1.2) calc(var(--u) * 3.2);
+    }
+
+    .mark {
+        text-decoration: none;
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.8);
+        font-size: 0.75rem;
+    }
+
+    .mark-name {
+        font-weight: 800;
+        letter-spacing: 0.06em;
+    }
+
+    .mark-word {
+        color: var(--ink-soft);
+        font-weight: 500;
+    }
+
+    .mark:hover .mark-word {
+        color: var(--ribbon);
+    }
+
+    .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+        margin-inline-end: auto;
+    }
+
+    /* A guide tab: the class mark filled in its own colour, its heading set
+       beside it. The mark is the tab; nothing else is coloured. */
+    .tab {
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.6);
+        padding: calc(var(--u) * 0.3) calc(var(--u) * 1.2)
+            calc(var(--u) * 0.3) calc(var(--u) * 0.4);
+        font-size: 0.6875rem;
+        text-decoration: none;
+        color: var(--ink-soft);
+        transition: color var(--flick);
+    }
+
+    .tab-code {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.6em;
+        block-size: 1.6em;
+        background: var(--tab, var(--ink-soft));
+        color: var(--stock);
+        font-weight: 800;
+        letter-spacing: 0;
+    }
+
+    .tab:hover,
+    .tab:focus-visible {
+        color: var(--ink);
+    }
+
+    .tab[aria-current="page"] {
+        color: var(--ink);
+        font-weight: 800;
+    }
+
+    .tab[aria-current="page"] .tab-heading {
+        border-block-end: 2px solid var(--tab, var(--ink));
+    }
+
+    .tools {
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 1.6);
+    }
+
+    /* Enabled by the enhancement script; a control that cannot work never
+       renders. The register on the front is the full index without it. */
+    .lookup {
+        display: none;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.8);
+    }
+
+    :global([data-ready]) .lookup {
+        display: flex;
+    }
+
+    .lookup label {
+        font-size: 0.625rem;
+        color: var(--ink-soft);
+    }
+
+    .lookup input {
+        font: inherit;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--ink);
+        background: var(--stock-sunk);
+        border: 0;
+        border-block-end: var(--rule-main);
+        padding: calc(var(--u) * 0.3) calc(var(--u) * 0.6);
+        inline-size: 8ch;
+    }
+
+    .lookup input::placeholder {
+        color: var(--ink-soft);
+        opacity: 1;
+    }
+
+    .lookup input:focus {
+        border-block-end-color: var(--ribbon);
+    }
+
+    .stat {
+        font: inherit;
+        font-family: var(--face-signage);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-size: 0.625rem;
+        color: var(--ink-soft);
+        background: none;
+        border: 0;
+        border-block-end: var(--rule-hair);
+        padding: calc(var(--u) * 0.3) 0;
+        cursor: pointer;
+        transition: color var(--flick);
+    }
+
+    /* Ink, not ribbon: the toggle references nothing, and red is reserved for
+       cross-references and corrections. */
+    .stat:hover {
+        color: var(--ink);
+        border-block-end-color: var(--ink);
+    }
+
+    @media (max-width: 46rem) {
+        .head {
+            position: static;
+        }
+
+        .head-inner {
+            gap: calc(var(--u) * 1.2) calc(var(--u) * 1.6);
+        }
+
+        .tab-heading {
+            display: none;
+        }
+
+        .tab {
+            padding-inline-end: calc(var(--u) * 0.4);
+        }
+    }
+</style>

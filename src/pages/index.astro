@@ -1,0 +1,92 @@
+---
+import Catalog from "../layouts/Catalog.astro";
+import GuideCard from "../components/GuideCard.astro";
+import Traffic from "../components/Traffic.astro";
+import SeeAlso from "../components/SeeAlso.astro";
+import Register from "../components/Register.astro";
+import { loadCatalog } from "../lib/catalog";
+
+const catalog = await loadCatalog();
+---
+
+<Catalog>
+    <div class="front">
+        <GuideCard catalog={catalog} />
+        <Traffic traffic={catalog.traffic} />
+        <SeeAlso crossings={catalog.crossings} />
+        <Register
+            entries={catalog.entries}
+            heading="The drawer"
+            gloss="Every record, most recent accession first. A call number addresses a record; type one in the field above to go to it."
+        />
+    </div>
+</Catalog>
+
+<style>
+    /* The rod: one unbroken rule down the inner edge of the call-number rail,
+       running the full height of the page. Every section hangs off it, and the
+       register's call numbers sit in the rail it reserves. */
+    .front {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: calc(var(--u) * 4);
+        align-items: start;
+        padding-inline-start: calc(var(--rail) + var(--gutter));
+        background-image: linear-gradient(var(--line), var(--line));
+        background-position: var(--rail) 0;
+        background-size: 1px 100%;
+        background-repeat: no-repeat;
+    }
+
+    .front > :global(.guide) {
+        padding-block-end: calc(var(--u) * 4);
+    }
+
+    .front > :global(.seealso),
+    .front > :global(.register) {
+        grid-column: 1 / -1;
+    }
+
+    .front > :global(.seealso) {
+        border-block-start: var(--rule-heavy);
+    }
+
+    .front :global(.register .card) {
+        margin-inline-start: calc(-1 * (var(--rail) + var(--gutter)));
+    }
+
+    /* On a phone the matrix summarises tracings the visitor has not met yet,
+       so it moves below them. Arrival then reaches a real crossing. */
+    @media (max-width: 46rem) {
+        .front {
+            display: flex;
+            flex-direction: column;
+            padding-inline-start: 0;
+            background-image: none;
+        }
+
+        .front > :global(.guide) {
+            order: 1;
+            padding-block-end: calc(var(--u) * 2);
+        }
+
+        .front > :global(.seealso) {
+            order: 2;
+            margin-block-start: calc(var(--u) * 2);
+        }
+
+        .front > :global(.traffic) {
+            order: 3;
+            padding-block-end: calc(var(--u) * 3.2);
+            border-block-end: var(--rule-heavy);
+        }
+
+        .front > :global(.register) {
+            order: 4;
+        }
+
+        .front :global(.register .card) {
+            margin-inline-start: 0;
+        }
+    }
+</style>

@@ -1,0 +1,251 @@
+---
+import Catalog from "../layouts/Catalog.astro";
+import { AUTHORITY } from "../lib/authority";
+import { SITE } from "../lib/site";
+import { loadCatalog } from "../lib/catalog";
+
+const catalog = await loadCatalog();
+const provisional = AUTHORITY.some((field) =>
+    field.lines.some((line) => line.provisional === true),
+);
+const byClass = catalog.traffic.classes.map((klass) => ({
+    klass,
+    count: catalog.entries.filter((entry) => entry.klass.id === klass.id).length,
+}));
+---
+
+<Catalog
+    title="Authority record"
+    description={`Authority record for ${SITE.name}: established heading, fields of activity, and the works catalogued under it.`}
+>
+    <article class="authority">
+        <header class="banner">
+            <h1 class="name signage">{SITE.name}</h1>
+            <p class="gloss">
+                A library keeps one of these for every person it catalogues: the
+                established heading, its variant forms, and the sources each fact
+                was found in. This is the curriculum vitae, kept the same way.
+            </p>
+        </header>
+
+        <dl class="fields">
+            {
+                AUTHORITY.map((field) => (
+                    <div class="field filed">
+                        <dt class="rail">
+                            <span class="tag">{field.tag}</span>
+                            <span class="tag-label">{field.label}</span>
+                        </dt>
+                        <dd class="lines">
+                            {field.lines.map((line) => (
+                                <p class:list={["line", { prov: line.provisional }]}>
+                                    {line.when && <span class="when">{line.when}</span>}
+                                    {line.href === undefined ? (
+                                        <span>{line.text}</span>
+                                    ) : (
+                                        <a href={line.href}>{line.text}</a>
+                                    )}
+                                </p>
+                            ))}
+                        </dd>
+                    </div>
+                ))
+            }
+
+            <div class="field filed">
+                <dt class="rail">
+                    <span class="tag">500</span>
+                    <span class="tag-label">Works catalogued</span>
+                </dt>
+                <dd class="lines">
+                    <p class="counts">
+                        {
+                            byClass.map(({ klass, count }) => (
+                                <a class="count" href={`/${klass.id}`} data-class={klass.id}>
+                                    <span class="count-mark">{klass.code}</span>
+                                    <span class="count-n">{count}</span>
+                                    <span class="count-label">{klass.heading}</span>
+                                </a>
+                            ))
+                        }
+                    </p>
+                </dd>
+            </div>
+
+            <div class="field filed">
+                <dt class="rail">
+                    <span class="tag">856</span>
+                    <span class="tag-label">Electronic location</span>
+                </dt>
+                <dd class="lines">
+                    <p class="line">
+                        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                    </p>
+                </dd>
+            </div>
+        </dl>
+
+        {
+            provisional && (
+                <p class="stamp signage">
+                    Provisional record — fields marked in red await real data
+                </p>
+            )
+        }
+    </article>
+</Catalog>
+
+<style>
+    .banner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: last baseline;
+        justify-content: space-between;
+        gap: calc(var(--u) * 2.4) calc(var(--u) * 4.8);
+        padding-block-end: calc(var(--u) * 2.4);
+        border-block-end: var(--rule-heavy);
+    }
+
+    .name {
+        margin: 0;
+        font-size: clamp(1.75rem, 5.6vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        line-height: 0.94;
+    }
+
+    .gloss {
+        margin: 0;
+        font-size: 0.75rem;
+        line-height: calc(var(--u) * 1.9);
+        color: var(--ink-soft);
+        max-width: 42ch;
+    }
+
+    .fields {
+        margin: 0;
+    }
+
+    .field {
+        padding-block: calc(var(--u) * 2);
+        border-block-end: var(--rule-hair);
+    }
+
+    .rail {
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        gap: calc(var(--u) * 0.2);
+    }
+
+    .tag {
+        font-weight: 700;
+        font-size: 0.8125rem;
+        color: var(--ink);
+        letter-spacing: 0.04em;
+    }
+
+    .tag-label {
+        font-family: var(--face-signage);
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-weight: 700;
+        font-size: 0.5rem;
+        color: var(--ink-soft);
+        text-align: end;
+    }
+
+    .lines {
+        margin: 0;
+    }
+
+    .line {
+        display: flex;
+        gap: calc(var(--u) * 1.6);
+        margin: 0;
+        font-size: 0.9375rem;
+        line-height: calc(var(--u) * 2.4);
+        max-width: 62ch;
+    }
+
+    .line + .line {
+        margin-block-start: calc(var(--u) * 0.6);
+        padding-block-start: calc(var(--u) * 0.6);
+        border-block-start: var(--rule-hair);
+    }
+
+    .when {
+        flex: 0 0 8ch;
+        color: var(--ink-soft);
+        font-size: 0.75rem;
+    }
+
+    .line.prov {
+        color: var(--ribbon);
+    }
+
+    .counts {
+        display: flex;
+        flex-wrap: wrap;
+        gap: calc(var(--u) * 1.2) calc(var(--u) * 3.2);
+        margin: 0;
+    }
+
+    .count {
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.8);
+        text-decoration: none;
+    }
+
+    .count-mark {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.7em;
+        block-size: 1.7em;
+        background: var(--tab, var(--ink));
+        color: var(--stock);
+        font-family: var(--face-signage);
+        font-weight: 800;
+        font-size: 0.6875rem;
+    }
+
+    .count-n {
+        font-size: 1.125rem;
+        font-weight: 600;
+    }
+
+    .count-label {
+        font-family: var(--face-signage);
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-weight: 700;
+        font-size: 0.5625rem;
+        color: var(--ink-soft);
+    }
+
+    .count:hover .count-label {
+        color: var(--ink);
+    }
+
+    .stamp {
+        display: inline-block;
+        margin: calc(var(--u) * 3.2) 0 0;
+        padding: calc(var(--u) * 0.6) calc(var(--u) * 1.2);
+        font-size: 0.5625rem;
+        color: var(--ribbon);
+        border: 1px solid var(--ribbon);
+    }
+
+    @media (max-width: 46rem) {
+        .rail {
+            flex-direction: row;
+            align-items: baseline;
+            gap: calc(var(--u) * 1.2);
+        }
+
+        .tag-label {
+            text-align: start;
+        }
+    }
+</style>

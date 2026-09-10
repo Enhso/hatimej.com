@@ -1,0 +1,111 @@
+---
+import type { GetStaticPaths } from "astro";
+import { render } from "astro:content";
+import Catalog from "../../layouts/Catalog.astro";
+import Apparatus from "../../components/Apparatus.astro";
+import { accession, loadCatalog } from "../../lib/catalog";
+
+export const getStaticPaths = (async () => {
+    const catalog = await loadCatalog();
+    return catalog.entries.map((entry) => ({
+        params: { klass: entry.klass.id, entry: entry.id },
+        props: { entry },
+    }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry.entry);
+---
+
+<Catalog
+    title={entry.title}
+    klass={entry.klass.id}
+    description={entry.summary ?? `${entry.klass.label}, ${accession(entry.date)}.`}
+>
+    <article class="record">
+        <header class="card filed">
+            <div class="rail">
+                <span class="call">{entry.callNumber}</span>
+            </div>
+            <div>
+                <h1 class="title">{entry.title}</h1>
+                <p class="statement">
+                    {entry.klass.label}. — {accession(entry.date)}. —{" "}
+                    {entry.tracings.length}
+                    {entry.tracings.length === 1 ? " tracing" : " tracings"}.
+                    {entry.placeholder && <span class="prov"> — Provisional record.</span>}
+                </p>
+                {entry.summary && <p class="summary">{entry.summary}</p>}
+            </div>
+        </header>
+
+        <div class="filed">
+            <div class="rail" aria-hidden="true"></div>
+            <div class="read">
+                <Content />
+            </div>
+        </div>
+
+        <div class="filed">
+            <div class="rail" aria-hidden="true"></div>
+            <Apparatus entry={entry} />
+        </div>
+    </article>
+</Catalog>
+
+<style>
+    .record {
+        max-width: 62rem;
+    }
+
+    .card {
+        padding-block-end: calc(var(--u) * 3.2);
+        border-block-end: var(--rule-heavy);
+    }
+
+    .rail .call {
+        font-size: 1rem;
+    }
+
+    .title {
+        margin: 0;
+        font-family: var(--face-signage);
+        font-weight: 800;
+        font-size: clamp(1.5rem, 4.4vw, 2.5rem);
+        line-height: 1.02;
+        letter-spacing: -0.022em;
+        max-width: 26ch;
+    }
+
+    .statement {
+        margin: calc(var(--u) * 1.6) 0 0;
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+    }
+
+    .prov {
+        color: var(--ribbon);
+    }
+
+    .summary {
+        margin: calc(var(--u) * 1.6) 0 0;
+        font-family: var(--face-read);
+        font-size: 1rem;
+        line-height: calc(var(--u) * 2.6);
+        max-width: 56ch;
+    }
+
+    .record > .filed {
+        padding-block-start: calc(var(--u) * 4);
+    }
+
+    .record > .filed > .rail {
+        border-inline-end: var(--rule-hair);
+    }
+
+    @media (max-width: 46rem) {
+        .record > .filed > .rail {
+            display: none;
+        }
+    }
+</style>

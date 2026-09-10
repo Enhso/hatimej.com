@@ -1,0 +1,58 @@
+---
+import "../styles/catalog.css";
+import RunningHead from "../components/RunningHead.astro";
+import Foot from "../components/Foot.astro";
+import { SITE } from "../lib/site";
+import { loadCatalog } from "../lib/catalog";
+
+interface Props {
+    /** Page title, printed before the catalog name. Omit on the front. */
+    title?: string;
+    description?: string;
+    /** Class id of the current entry, so the page inherits its tab colour. */
+    klass?: string;
+}
+
+const { title, description = SITE.description, klass } = Astro.props;
+const catalog = await loadCatalog();
+const heading = title === undefined ? SITE.name : `${title} — ${SITE.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://ht.me");
+---
+
+<!doctype html>
+<html lang="en" data-class={klass}>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{heading}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical.href} />
+        <meta name="author" content={SITE.name} />
+        <meta property="og:title" content={heading} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <link rel="icon" href="/mark.svg" type="image/svg+xml" />
+        <script is:inline>
+            // Set the theme before first paint so the stock never flashes.
+            try {
+                const stored = localStorage.getItem("catalog-theme");
+                if (stored === "light" || stored === "dark") {
+                    document.documentElement.dataset.theme = stored;
+                }
+            } catch {
+                /* Storage can throw in private windows; the media query covers it. */
+            }
+        </script>
+    </head>
+    <body>
+        <a class="skip" href="#field">Skip to the record</a>
+        <RunningHead entries={catalog.entries} />
+        <main id="field" class="sheet">
+            <slot />
+        </main>
+        <Foot />
+        <script>
+            import "../scripts/catalog";
+        </script>
+    </body>
+</html>

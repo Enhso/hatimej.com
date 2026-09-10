@@ -1,0 +1,195 @@
+---
+import type { Traffic } from "../lib/catalog";
+
+interface Props {
+    traffic: Traffic;
+}
+
+const { traffic } = Astro.props;
+---
+
+<figure class="traffic">
+    <table>
+        <caption class="signage">
+            Tracing traffic
+            <span class="legend">
+                counts off the diagonal cross a class boundary
+            </span>
+            <span class="key">
+                {
+                    traffic.classes.map((klass) => (
+                        <span class="key-item" data-class={klass.id}>
+                            <span class="key-code">{klass.code}</span>
+                            {klass.heading}
+                        </span>
+                    ))
+                }
+            </span>
+        </caption>
+        <thead>
+            <tr>
+                <td class="corner"><span class="vh">From class, to class</span></td>
+                {
+                    traffic.classes.map((klass) => (
+                        <th scope="col" data-class={klass.id}>
+                            <span class="mark">{klass.code}</span>
+                            <span class="vh">{klass.heading}</span>
+                        </th>
+                    ))
+                }
+            </tr>
+        </thead>
+        <tbody>
+            {
+                traffic.rows.map((row) => (
+                    <tr>
+                        <th scope="row" data-class={row.from.id}>
+                            <span class="mark">{row.from.code}</span>
+                            <span class="vh">{row.from.heading}</span>
+                        </th>
+                        {row.cells.map((cell) => (
+                            <td
+                                class:list={[
+                                    "count",
+                                    {
+                                        within: cell.to.id === row.from.id,
+                                        none: cell.count === 0,
+                                    },
+                                ]}
+                            >
+                                {cell.count === 0 ? "·" : cell.count}
+                            </td>
+                        ))}
+                    </tr>
+                ))
+            }
+        </tbody>
+    </table>
+</figure>
+
+<style>
+    .traffic {
+        margin: 0;
+    }
+
+    table {
+        border-collapse: collapse;
+        font-variant-numeric: tabular-nums;
+    }
+
+    caption {
+        caption-side: top;
+        text-align: start;
+        font-size: 0.5625rem;
+        color: var(--ink-soft);
+        padding-block-end: calc(var(--u) * 1.2);
+    }
+
+    .legend {
+        display: block;
+        font-family: var(--face-record);
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 400;
+        color: var(--ink-soft);
+        padding-block-start: calc(var(--u) * 0.4);
+        max-width: 26ch;
+    }
+
+    /* The schedule already prints under the name, in the same viewport as the
+       matrix on a desktop. On a phone the matrix sits far below it, so the key
+       repeats here where it is actually needed. */
+    .key {
+        display: none;
+        flex-wrap: wrap;
+        gap: calc(var(--u) * 0.2) calc(var(--u) * 1.6);
+        font-family: var(--face-record);
+        text-transform: none;
+        letter-spacing: 0;
+        font-weight: 400;
+        padding-block-start: calc(var(--u) * 0.8);
+        max-width: 30ch;
+    }
+
+    .key-item {
+        display: inline-flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.5);
+        white-space: nowrap;
+    }
+
+    .key-code {
+        font-family: var(--face-signage);
+        font-weight: 800;
+        color: var(--tab, var(--ink));
+    }
+
+    th,
+    td {
+        border: var(--rule-hair);
+        padding: calc(var(--u) * 0.9) calc(var(--u) * 1.4);
+        text-align: center;
+        font-weight: 400;
+        min-inline-size: calc(var(--u) * 4);
+    }
+
+    .corner {
+        border: 0;
+    }
+
+    th .mark {
+        font-family: var(--face-signage);
+        font-weight: 800;
+        font-size: 0.75rem;
+        color: var(--tab, var(--ink));
+    }
+
+    .count {
+        font-size: 0.9375rem;
+        color: var(--ribbon);
+        font-weight: 600;
+    }
+
+    /* On the diagonal a tracing stays inside its own class, so it is ordinary
+       ink rather than a cross-reference. */
+    .count.within {
+        color: var(--ink-soft);
+        font-weight: 400;
+        background: var(--stock-sunk);
+    }
+
+    .count.none {
+        color: var(--ink-soft);
+        font-weight: 400;
+    }
+
+    .vh {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    @media (max-width: 46rem) {
+        caption {
+            padding-block-end: calc(var(--u) * 0.8);
+        }
+
+        .key {
+            display: flex;
+            max-width: none;
+        }
+
+        th,
+        td {
+            padding: calc(var(--u) * 0.6) calc(var(--u) * 1);
+            min-inline-size: calc(var(--u) * 3.4);
+        }
+
+        .count {
+            font-size: 0.8125rem;
+        }
+    }
+</style>

@@ -1,0 +1,365 @@
+@import "@fontsource-variable/libre-franklin";
+@import "@fontsource-variable/spline-sans-mono";
+@import "@fontsource-variable/source-serif-4";
+
+/* ==========================================================================
+   The catalog
+
+   One geometry. Every rule, rail, tab and tracing is a multiple of --u or a
+   character advance of the record face. Nothing is shadowed, raised or
+   blurred; layers separate by rule weight and ground value alone.
+   ========================================================================== */
+
+:root {
+    color-scheme: light;
+
+    /* --- Card stock, ink, ribbon ------------------------------------------ */
+    --stock: #e4e6e9;
+    --stock-lit: #edeff2;
+    --stock-sunk: #d9dbdf;
+    --ink: #17181a;
+    --ink-soft: #55575a;
+
+    /* The bichrome ribbon's second colour. Cross-references and corrections
+       only; it appears nowhere else in the system. */
+    --ribbon: #b4232a;
+
+    --line: #b9bcb4;
+    --line-faint: #d2d4cd;
+
+    /* --- Guide tabs, one per class in the schedule ------------------------- */
+    --tab-r: #1b4b9e;
+    --tab-p: #7a2e6d;
+    --tab-f: #8a4e00;
+    --tab-n: #1f6b4a;
+
+    /* --- Faces ------------------------------------------------------------ */
+    --face-signage: "Libre Franklin Variable", "Libre Franklin", "Helvetica Neue",
+        Arial, sans-serif;
+    --face-record: "Spline Sans Mono Variable", "Spline Sans Mono", ui-monospace,
+        "SFMono-Regular", Menlo, monospace;
+    --face-read: "Source Serif 4 Variable", "Source Serif 4", Georgia, serif;
+
+    /* --- Geometry --------------------------------------------------------- */
+    --u: 0.625rem; /* the atom; the record line is 2u */
+    --rec-size: 0.8125rem;
+    --rec-line: calc(var(--u) * 2);
+    --rail: 7.5ch; /* holds a four-character call number plus its band */
+    --gutter: calc(var(--u) * 2.4);
+    --page-side: calc(var(--u) * 3.2);
+    --measure: 68ch;
+
+    /* --- Rules, three weights --------------------------------------------- */
+    --rule-hair: 1px solid var(--line-faint);
+    --rule-main: 1px solid var(--line);
+    --rule-heavy: 2px solid var(--ink);
+
+    --flick: 90ms steps(2, end);
+}
+
+:root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+        color-scheme: dark;
+        --stock: #131416;
+        --stock-lit: #1b1d20;
+        --stock-sunk: #0d0e10;
+        --ink: #e4e5e0;
+        --ink-soft: #9a9c98;
+        --ribbon: #e85d62;
+        --line: #3a3d40;
+        --line-faint: #2a2c2f;
+        --tab-r: #6e9ee8;
+        --tab-p: #c98bc0;
+        --tab-f: #e0a040;
+        --tab-n: #57ba8c;
+    }
+}
+
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --stock: #131416;
+    --stock-lit: #1b1d20;
+    --stock-sunk: #0d0e10;
+    --ink: #e4e5e0;
+    --ink-soft: #9a9c98;
+    --ribbon: #e85d62;
+    --line: #3a3d40;
+    --line-faint: #2a2c2f;
+    --tab-r: #6e9ee8;
+    --tab-p: #c98bc0;
+    --tab-f: #e0a040;
+    --tab-n: #57ba8c;
+}
+
+/* Class marks resolve their own tab colour, so a new class needs one variable
+   pair above and one rule here. */
+[data-class="research"] { --tab: var(--tab-r); }
+[data-class="poetry"] { --tab: var(--tab-p); }
+[data-class="forecasts"] { --tab: var(--tab-f); }
+[data-class="notes"] { --tab: var(--tab-n); }
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    background: var(--stock);
+    color: var(--ink);
+    font-family: var(--face-record);
+    font-size: var(--rec-size);
+    line-height: var(--rec-line);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Browser surfaces belong to the design system too. */
+::selection {
+    background: var(--ribbon);
+    color: var(--stock);
+}
+
+:focus-visible {
+    outline: 2px solid var(--ribbon);
+    outline-offset: 2px;
+}
+
+:root {
+    scrollbar-color: var(--line) var(--stock-sunk);
+    scrollbar-width: thin;
+    caret-color: var(--ribbon);
+    accent-color: var(--ribbon);
+}
+
+::-webkit-scrollbar {
+    width: calc(var(--u) * 1.2);
+    height: calc(var(--u) * 1.2);
+}
+
+::-webkit-scrollbar-track {
+    background: var(--stock-sunk);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border: 2px solid var(--stock-sunk);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--ink-soft);
+}
+
+a {
+    color: inherit;
+    text-decoration-color: var(--line);
+    text-underline-offset: 0.22em;
+    text-decoration-thickness: 1px;
+}
+
+a:hover {
+    text-decoration-color: var(--ribbon);
+}
+
+/* ==========================================================================
+   Voices
+   ========================================================================== */
+
+/* Signage: guide tabs, headings, class marks. Institutional, tracked, set in
+   caps at every size it appears. */
+.signage {
+    font-family: var(--face-signage);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    line-height: 1.15;
+}
+
+/* The record voice is the body default, so it needs no class. Call numbers are
+   the one part of it that is set as signage-adjacent: locked width, no
+   ligatures, always keyable. */
+.call {
+    font-family: var(--face-record);
+    font-weight: 600;
+    font-variant-ligatures: none;
+    letter-spacing: 0.02em;
+    color: var(--tab, var(--ink));
+    white-space: nowrap;
+}
+
+/* Reading: poems, essays, research prose. */
+.read {
+    font-family: var(--face-read);
+    font-size: 1.0625rem;
+    line-height: calc(var(--u) * 2.8);
+    color: var(--ink);
+}
+
+.read p,
+.read ul,
+.read ol,
+.read blockquote,
+.read pre {
+    max-width: var(--measure);
+}
+
+.read > * + * {
+    margin-block-start: calc(var(--u) * 2.4);
+}
+
+.read h2,
+.read h3 {
+    font-family: var(--face-signage);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.8125rem;
+    line-height: var(--rec-line);
+    color: var(--ink-soft);
+    margin-block-start: calc(var(--u) * 4.8);
+    margin-block-end: calc(var(--u) * 1.6);
+    padding-block-end: calc(var(--u) * 0.6);
+    border-block-end: var(--rule-main);
+    max-width: var(--measure);
+}
+
+.read h2 + *,
+.read h3 + * {
+    margin-block-start: 0;
+}
+
+.read blockquote {
+    margin-inline: 0;
+    padding-inline-start: calc(var(--u) * 2.4);
+    border-inline-start: 1px solid var(--line);
+    color: var(--ink-soft);
+}
+
+.read a {
+    text-decoration-color: var(--ribbon);
+}
+
+.read code {
+    font-family: var(--face-record);
+    font-size: 0.85em;
+    background: var(--stock-sunk);
+    padding: 0.1em 0.35em;
+}
+
+.read pre {
+    font-family: var(--face-record);
+    font-size: 0.8125rem;
+    line-height: var(--rec-line);
+    background: var(--stock-sunk);
+    padding: calc(var(--u) * 1.6);
+    overflow-x: auto;
+    border: var(--rule-hair);
+}
+
+.read pre code {
+    background: none;
+    padding: 0;
+}
+
+/* Verse keeps its own line breaks and never wraps to the reading measure. */
+.read .verse,
+.read pre.verse {
+    font-family: var(--face-read);
+    font-size: 1.0625rem;
+    line-height: calc(var(--u) * 2.9);
+    background: none;
+    border: 0;
+    padding: 0;
+    white-space: pre-wrap;
+    max-width: 52ch;
+}
+
+/* ==========================================================================
+   Page frame: the rail and the field
+   ========================================================================== */
+
+.sheet {
+    max-width: 78rem;
+    margin-inline: auto;
+    padding-inline: var(--page-side);
+    padding-block: calc(var(--u) * 3.2) calc(var(--u) * 8);
+}
+
+/* The rod: a continuous vertical rule down the inner edge of the call-number
+   rail, running the height of whatever it holds. */
+.filed {
+    display: grid;
+    grid-template-columns: var(--rail) 1fr;
+    column-gap: var(--gutter);
+}
+
+.filed > .rail {
+    border-inline-end: var(--rule-main);
+    padding-inline-end: calc(var(--u) * 1.2);
+    text-align: end;
+}
+
+@media (max-width: 46rem) {
+    .filed {
+        grid-template-columns: 1fr;
+        row-gap: calc(var(--u) * 0.8);
+    }
+
+    /* The rail lies down rather than growing a stripe: the class mark keeps its
+       own tab colour and the rule runs under it, as it does on a filed card. */
+    .filed > .rail {
+        border-inline-end: 0;
+        border-block-end: var(--rule-main);
+        padding-inline-end: 0;
+        padding-block-end: calc(var(--u) * 0.4);
+        text-align: start;
+    }
+}
+
+/* ==========================================================================
+   Skip link
+   ========================================================================== */
+
+.skip {
+    position: absolute;
+    inset-block-start: calc(var(--u) * 1.2);
+    inset-inline-start: calc(var(--u) * 1.2);
+    z-index: 10;
+    padding: calc(var(--u) * 0.8) calc(var(--u) * 1.6);
+    background: var(--ink);
+    color: var(--stock);
+    font-family: var(--face-signage);
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-weight: 700;
+    text-decoration: none;
+    transform: translateY(-200%);
+}
+
+.skip:focus {
+    transform: none;
+}
+
+@media (max-width: 46rem) {
+    .sheet {
+        padding-block: calc(var(--u) * 2) calc(var(--u) * 6);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0ms !important;
+        animation-duration: 0ms !important;
+    }
+}

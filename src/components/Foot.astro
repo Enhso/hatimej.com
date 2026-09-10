@@ -1,0 +1,66 @@
+---
+import { SITE } from "../lib/site";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="foot">
+    <div class="foot-inner">
+        <p class="colophon">
+            Records are catalogued by hand. A tracing is drawn only where one
+            piece actually bears on another, and carries its reason when there
+            was one worth writing down.
+        </p>
+        <p class="imprint">
+            <span>{SITE.name}, {year}</span>
+            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        </p>
+    </div>
+</footer>
+
+<style>
+    .foot {
+        border-block-start: var(--rule-heavy);
+        margin-block-start: calc(var(--u) * 8);
+    }
+
+    .foot-inner {
+        max-width: 78rem;
+        margin-inline: auto;
+        padding-inline: var(--page-side);
+        padding-block: calc(var(--u) * 2.4) calc(var(--u) * 6.4);
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: start;
+        gap: calc(var(--u) * 2.4) calc(var(--u) * 4.8);
+    }
+
+    .colophon {
+        margin: 0;
+        font-size: 0.6875rem;
+        line-height: calc(var(--u) * 1.8);
+        color: var(--ink-soft);
+        max-width: 52ch;
+    }
+
+    .imprint {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: calc(var(--u) * 0.4);
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+        text-align: end;
+    }
+
+    .imprint a {
+        color: var(--ink);
+    }
+
+    @media (max-width: 46rem) {
+        .imprint {
+            text-align: start;
+        }
+    }
+</style>

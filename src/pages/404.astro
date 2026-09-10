@@ -1,0 +1,76 @@
+---
+import Catalog from "../layouts/Catalog.astro";
+import { loadCatalog } from "../lib/catalog";
+
+const catalog = await loadCatalog();
+const recent = catalog.entries.slice(0, 4);
+---
+
+<Catalog title="No such call number" description="No record carries that call number.">
+    <section class="miss">
+        <h1 class="signage">No record carries that call number</h1>
+        <p class="gloss">
+            The address may have been withdrawn, or a tracing may have been drawn
+            to a record that was never filed. The most recent accessions are
+            below; the full drawer is on the front.
+        </p>
+        <ul class="recent">
+            {
+                recent.map((entry) => (
+                    <li data-class={entry.klass.id}>
+                        <a href={entry.href}>
+                            <span class="call">{entry.callNumber}</span>
+                            <span>{entry.title}</span>
+                        </a>
+                    </li>
+                ))
+            }
+        </ul>
+    </section>
+</Catalog>
+
+<style>
+    .miss {
+        padding-block: calc(var(--u) * 4.8);
+        max-width: 58ch;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4.4vw, 2.25rem);
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.02;
+    }
+
+    .gloss {
+        margin: calc(var(--u) * 2.4) 0 0;
+        font-size: 0.8125rem;
+        line-height: calc(var(--u) * 2.2);
+        color: var(--ink-soft);
+    }
+
+    .recent {
+        list-style: none;
+        margin: calc(var(--u) * 4) 0 0;
+        padding-block-start: calc(var(--u) * 1.2);
+        padding-inline: 0;
+        border-block-start: var(--rule-heavy);
+    }
+
+    .recent li {
+        padding-block: calc(var(--u) * 1.2);
+        border-block-end: var(--rule-hair);
+    }
+
+    .recent a {
+        display: flex;
+        gap: calc(var(--u) * 1.6);
+        text-decoration: none;
+        font-size: 0.9375rem;
+    }
+
+    .recent a:hover span:last-child {
+        border-block-end: 1px solid var(--ribbon);
+    }
+</style>

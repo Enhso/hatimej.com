@@ -1,0 +1,192 @@
+---
+import { numeral, type Entry, type ResolvedTracing } from "../lib/catalog";
+
+interface Props {
+    entry: Entry;
+}
+
+const { entry } = Astro.props;
+
+const bands: { heading: string; gloss: string; tracings: ResolvedTracing[] }[] = [
+    {
+        heading: "Tracings",
+        gloss: "Drawn from this record.",
+        tracings: entry.tracings,
+    },
+    {
+        heading: "Traced from",
+        gloss: "Records that point here.",
+        tracings: entry.tracedBy,
+    },
+];
+---
+
+<section class="apparatus" aria-label="Cross-references">
+    {
+        bands.map((band) => (
+            <div class="band">
+                <div class="band-head">
+                    <h2 class="signage">{band.heading}</h2>
+                    <p class="gloss">{band.gloss}</p>
+                </div>
+
+                {band.tracings.length === 0 ? (
+                    <p class="none">None recorded.</p>
+                ) : (
+                    <ol class="list">
+                        {band.tracings.map((tracing, index) => (
+                            <li
+                                class:list={["item", { annotated: tracing.note !== undefined }]}
+                                data-class={tracing.target.klass.id}
+                            >
+                                <span class="numeral" aria-hidden="true">
+                                    {numeral(index)}.
+                                </span>
+                                <a
+                                    class="ref"
+                                    href={tracing.target.href}
+                                    data-source-ref={entry.ref}
+                                    data-target-ref={tracing.target.ref}
+                                >
+                                    <span class="call">{tracing.target.callNumber}</span>
+                                    <span class="ref-title">{tracing.target.title}</span>
+                                </a>
+                                <span class="klass">{tracing.target.klass.label}</span>
+                                {tracing.note !== undefined && (
+                                    <p class="note">{tracing.note}</p>
+                                )}
+                            </li>
+                        ))}
+                    </ol>
+                )}
+            </div>
+        ))
+    }
+</section>
+
+<style>
+    .apparatus {
+        margin-block-start: calc(var(--u) * 8);
+        border-block-start: var(--rule-heavy);
+    }
+
+    .band {
+        padding-block: calc(var(--u) * 3.2);
+        border-block-end: var(--rule-hair);
+    }
+
+    .band:last-child {
+        border-block-end: 0;
+    }
+
+    .band-head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.4) calc(var(--u) * 1.6);
+        margin-block-end: calc(var(--u) * 1.6);
+    }
+
+    h2 {
+        margin: 0;
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+
+    .gloss {
+        margin: 0;
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+    }
+
+    /* Absence prints. An entry with no tracings still shows the band. */
+    .none {
+        margin: 0;
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+    }
+
+    .list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .item {
+        display: grid;
+        grid-template-columns: 3.5ch minmax(0, 1fr) auto;
+        align-items: baseline;
+        column-gap: calc(var(--u) * 1.6);
+        padding-block: calc(var(--u) * 1.2);
+        border-block-start: var(--rule-hair);
+    }
+
+    .item:first-child {
+        border-block-start: 0;
+    }
+
+    .numeral {
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+    }
+
+    .ref {
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 1.2);
+        min-inline-size: 0;
+        text-decoration: none;
+        padding-block-end: 2px;
+        border-block-end: 1px solid var(--ribbon);
+    }
+
+    .item.annotated .ref {
+        border-block-end-width: 3px;
+    }
+
+    .ref-title {
+        font-family: var(--face-signage);
+        font-weight: 500;
+        font-size: 0.9375rem;
+    }
+
+    .ref:hover,
+    .ref:focus-visible {
+        background: var(--stock-sunk);
+    }
+
+    .klass {
+        font-family: var(--face-signage);
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-weight: 700;
+        font-size: 0.5625rem;
+        color: var(--ink-soft);
+        white-space: nowrap;
+    }
+
+    .note {
+        grid-column: 2 / -1;
+        margin: calc(var(--u) * 0.8) 0 0;
+        font-size: 0.75rem;
+        line-height: calc(var(--u) * 2);
+        color: var(--ink-soft);
+        max-width: 62ch;
+    }
+
+    @media (max-width: 46rem) {
+        .item {
+            grid-template-columns: 3.5ch minmax(0, 1fr);
+            row-gap: calc(var(--u) * 0.4);
+        }
+
+        .klass {
+            grid-column: 2;
+        }
+
+        .note {
+            grid-column: 2;
+        }
+    }
+</style>

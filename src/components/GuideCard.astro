@@ -1,0 +1,156 @@
+---
+import { SITE } from "../lib/site";
+import { accession, type Catalog } from "../lib/catalog";
+import { CLASSES } from "../lib/classes";
+
+interface Props {
+    catalog: Catalog;
+}
+
+const { catalog } = Astro.props;
+const { traffic } = catalog;
+const tracingTotal = traffic.crossTotal + traffic.withinTotal;
+---
+
+<section class="guide" aria-labelledby="catalog-name">
+    <h1 class="name signage" id="catalog-name">{SITE.name}</h1>
+    <p class="role">
+        {
+            CLASSES.map((klass, index) => (
+                <span class="role-item" data-class={klass.id}>
+                    <span class="role-code">{klass.code}</span>
+                    {klass.label}
+                    {index < CLASSES.length - 1 ? "," : ""}
+                </span>
+            ))
+        }
+    </p>
+
+    <dl class="extent">
+        <div><dt>Entries</dt><dd>{catalog.entries.length}</dd></div>
+        <div><dt>Tracings</dt><dd>{tracingTotal}</dd></div>
+        <div><dt>Crossing class</dt><dd class="crossing">{traffic.crossTotal}</dd></div>
+        <div>
+            <dt>Last accession</dt>
+            <dd>{catalog.lastAccession ? accession(catalog.lastAccession) : "—"}</dd>
+        </div>
+    </dl>
+
+    <p class="contact">
+        {SITE.location} · <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+    </p>
+
+    {
+        catalog.provisional && (
+            <p class="stamp signage">Provisional records — not for circulation</p>
+        )
+    }
+</section>
+
+<style>
+    .name {
+        font-size: clamp(2rem, 6.4vw, 3.5rem);
+        font-weight: 800;
+        letter-spacing: -0.025em;
+        line-height: 0.94;
+        margin: 0;
+    }
+
+    .role {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 calc(var(--u) * 1.2);
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+        margin: calc(var(--u) * 1.2) 0 0;
+        max-width: 52ch;
+    }
+
+    .role-item {
+        display: inline-flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.5);
+        white-space: nowrap;
+    }
+
+    .role-code {
+        font-family: var(--face-signage);
+        font-weight: 800;
+        font-size: 0.6875rem;
+        color: var(--tab, var(--ink));
+    }
+
+    .extent {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 calc(var(--u) * 3.2);
+        margin: calc(var(--u) * 3.2) 0 0;
+        padding-block-start: calc(var(--u) * 1.2);
+        border-block-start: var(--rule-main);
+    }
+
+    .extent div {
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 0.8);
+    }
+
+    .extent dt {
+        font-family: var(--face-signage);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.09em;
+        font-size: 0.5625rem;
+        color: var(--ink-soft);
+    }
+
+    .extent dd {
+        margin: 0;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .extent .crossing {
+        color: var(--ribbon);
+    }
+
+    .contact {
+        margin: calc(var(--u) * 1.6) 0 0;
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+    }
+
+    .contact a {
+        color: var(--ink);
+    }
+
+    /* The stamp removes itself: it prints only while at least one record in the
+       build is still illustrative. */
+    .stamp {
+        display: inline-block;
+        margin: calc(var(--u) * 2.4) 0 0;
+        padding: calc(var(--u) * 0.6) calc(var(--u) * 1.2);
+        font-size: 0.5625rem;
+        color: var(--ribbon);
+        border: 1px solid var(--ribbon);
+    }
+
+    @media (max-width: 46rem) {
+        .name {
+            font-size: 1.75rem;
+        }
+
+        .extent {
+            margin-block-start: calc(var(--u) * 2);
+            gap: 0 calc(var(--u) * 2.4);
+        }
+
+        .contact {
+            margin-block-start: calc(var(--u) * 1.2);
+        }
+
+        .stamp {
+            margin-block-start: calc(var(--u) * 1.6);
+        }
+    }
+</style>

@@ -1,0 +1,257 @@
+---
+import { numeral, type Crossing } from "../lib/catalog";
+
+interface Props {
+    crossings: Crossing[];
+}
+
+const { crossings } = Astro.props;
+const annotated = crossings.filter((crossing) => crossing.note !== undefined).length;
+---
+
+<section class="seealso" aria-labelledby="seealso-heading">
+    <header class="banner">
+        <h2 class="signage" id="seealso-heading">See also</h2>
+        <p class="gloss">
+            Every tracing in this catalog that leaves one class and arrives in
+            another. {annotated} of {crossings.length} carry the reason they were
+            drawn.
+        </p>
+    </header>
+
+    {
+        crossings.length === 0 ? (
+            <p class="empty">
+                No tracing yet crosses a class boundary. The rule below is the
+                catalog's, and it stays empty until one does.
+            </p>
+        ) : (
+            <ol class="crossings">
+                {crossings.map((crossing, index) => (
+                    <li
+                        class:list={["crossing", { annotated: crossing.note !== undefined }]}
+                        data-source-ref={crossing.source.ref}
+                        data-target-ref={crossing.target.ref}
+                    >
+                        <span class="numeral" aria-hidden="true">
+                            {numeral(index)}
+                        </span>
+
+                        <a
+                            class="end"
+                            href={crossing.source.href}
+                            data-class={crossing.source.klass.id}
+                            data-source-ref={crossing.source.ref}
+                            data-target-ref={crossing.target.ref}
+                        >
+                            <span class="call">{crossing.source.callNumber}</span>
+                            <span class="end-title">{crossing.source.title}</span>
+                        </a>
+
+                        <span class="link" aria-hidden="true" />
+
+                        <a
+                            class="end"
+                            href={crossing.target.href}
+                            data-class={crossing.target.klass.id}
+                            data-source-ref={crossing.source.ref}
+                            data-target-ref={crossing.target.ref}
+                        >
+                            <span class="call">{crossing.target.callNumber}</span>
+                            <span class="end-title">{crossing.target.title}</span>
+                        </a>
+
+                        {crossing.note !== undefined && <p class="note">{crossing.note}</p>}
+                    </li>
+                ))}
+            </ol>
+        )
+    }
+</section>
+
+<style>
+    .seealso {
+        padding-block: calc(var(--u) * 4.8);
+        border-block-end: var(--rule-heavy);
+    }
+
+    .seealso:first-child {
+        padding-block-start: 0;
+    }
+
+    .banner {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: last baseline;
+        justify-content: space-between;
+        gap: calc(var(--u) * 1.6) calc(var(--u) * 3.2);
+        padding-block-end: calc(var(--u) * 1.2);
+        border-block-end: var(--rule-heavy);
+    }
+
+    /* Set at a scale that genuinely breaks the column rather than sitting
+       inside it. */
+    h2 {
+        margin: 0;
+        font-size: clamp(1.75rem, 5.6vw, 3rem);
+        font-weight: 800;
+        letter-spacing: -0.015em;
+        line-height: 0.9;
+    }
+
+    .gloss {
+        margin: 0;
+        font-size: 0.75rem;
+        color: var(--ink-soft);
+        max-width: 40ch;
+    }
+
+    .empty {
+        margin: calc(var(--u) * 3.2) 0 0;
+        color: var(--ink-soft);
+        font-size: 0.8125rem;
+        max-width: 52ch;
+    }
+
+    .crossings {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .crossing {
+        display: grid;
+        grid-template-columns:
+            3.5ch
+            minmax(0, max-content)
+            minmax(calc(var(--u) * 4), 1fr)
+            minmax(0, max-content);
+        align-items: baseline;
+        column-gap: calc(var(--u) * 1.6);
+        padding-block: calc(var(--u) * 1.6);
+        border-block-end: var(--rule-hair);
+    }
+
+    .numeral {
+        font-size: 0.6875rem;
+        color: var(--ink-soft);
+        letter-spacing: 0.04em;
+    }
+
+    .numeral::after {
+        content: ".";
+    }
+
+    .end {
+        display: flex;
+        align-items: baseline;
+        gap: calc(var(--u) * 1.2);
+        min-inline-size: 0;
+        text-decoration: none;
+    }
+
+    .end-title {
+        font-size: 0.9375rem;
+        line-height: calc(var(--u) * 2.2);
+        border-block-end: 1px solid transparent;
+    }
+
+    .end:hover .end-title,
+    .end:focus-visible .end-title {
+        border-block-end-color: var(--ribbon);
+    }
+
+    /* The connector. Weight, never opacity, separates an annotated tracing
+       from a bare one. */
+    .link {
+        block-size: 0;
+        border-block-start: 1px solid var(--ribbon);
+        align-self: center;
+    }
+
+    .crossing.annotated .link {
+        border-block-start-width: 3px;
+    }
+
+    .note {
+        grid-column: 2 / -1;
+        margin: calc(var(--u) * 0.8) 0 0;
+        font-size: 0.75rem;
+        line-height: calc(var(--u) * 2);
+        color: var(--ink-soft);
+        max-width: 62ch;
+    }
+
+    /* When a crossing is selected elsewhere on the page, the rest of the card
+       drops to infrastructure weight. */
+    :global([data-pulled]) .crossing:not([data-lit]) .end-title {
+        color: var(--ink-soft);
+    }
+
+    :global([data-pulled]) .crossing:not([data-lit]) .link {
+        border-block-start-color: var(--line);
+    }
+
+    @media (max-width: 46rem) {
+        .seealso {
+            padding-block: calc(var(--u) * 2.4);
+        }
+
+        .banner {
+            gap: calc(var(--u) * 0.8) calc(var(--u) * 2.4);
+        }
+
+        .gloss {
+            font-size: 0.6875rem;
+        }
+
+        /* Every cell is placed by hand here. The connector claims column one
+           before auto-placement runs, so anything left to flow gets pushed out
+           of that column and the whole stack slips a row. */
+        .crossing {
+            grid-template-columns: 3.5ch minmax(0, 1fr);
+            grid-template-rows: auto auto auto;
+            row-gap: calc(var(--u) * 0.4);
+            padding-block: calc(var(--u) * 1.2);
+        }
+
+        .numeral {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .end {
+            grid-column: 2;
+        }
+
+        a.end:first-of-type {
+            grid-row: 2;
+        }
+
+        a.end:last-of-type {
+            grid-row: 3;
+        }
+
+        /* The connector turns to run down the page between the two ends. */
+        .link {
+            grid-column: 1;
+            grid-row: 2 / 4;
+            justify-self: end;
+            inline-size: 0;
+            block-size: 100%;
+            border-block-start: 0;
+            border-inline-start: 1px solid var(--ribbon);
+            align-self: stretch;
+            margin-inline-end: calc(var(--u) * 0.6);
+        }
+
+        .crossing.annotated .link {
+            border-inline-start-width: 3px;
+        }
+
+        .note {
+            grid-column: 2;
+            grid-row: 4;
+        }
+    }
+</style>

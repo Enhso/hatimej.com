@@ -1,0 +1,31 @@
+---
+import type { GetStaticPaths } from "astro";
+import Catalog from "../layouts/Catalog.astro";
+import Register from "../components/Register.astro";
+import { CLASSES } from "../lib/classes";
+import { loadCatalog } from "../lib/catalog";
+
+export const getStaticPaths = (async () => {
+    return CLASSES.map((klass) => ({
+        params: { klass: klass.id },
+        props: { klass },
+    }));
+}) satisfies GetStaticPaths;
+
+const { klass } = Astro.props;
+const catalog = await loadCatalog();
+const entries = catalog.entries.filter((entry) => entry.klass.id === klass.id);
+const crossing = entries.reduce(
+    (total, entry) =>
+        total + entry.tracings.filter((tracing) => tracing.crossClass).length,
+    0,
+);
+---
+
+<Catalog title={klass.heading} klass={klass.id} description={`${klass.label} in the catalog of ${entries.length} records.`}>
+    <Register
+        entries={entries}
+        heading={klass.heading}
+        gloss={`${entries.length} ${entries.length === 1 ? "record" : "records"} in this drawer, ${crossing} of their tracings leaving the class.`}
+    />
+</Catalog>
