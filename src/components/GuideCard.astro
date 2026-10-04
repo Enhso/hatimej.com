@@ -38,6 +38,7 @@ const tracingTotal = traffic.crossTotal + traffic.withinTotal;
 
     <p class="contact">
         {SITE.location} · <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+        {SITE.links.map((link) => <Fragment> · <a href={link.href}>{link.label}</a></Fragment>)}
     </p>
 
     {

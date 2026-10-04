@@ -11,12 +11,14 @@ interface Props {
     description?: string;
     /** Class id of the current entry, so the page inherits its tab colour. */
     klass?: string;
+    /** Original publication URL. Replaces the computed canonical URL when given. */
+    canonical?: string;
 }
 
-const { title, description = SITE.description, klass } = Astro.props;
+const { title, description = SITE.description, klass, canonical: original } = Astro.props;
 const catalog = await loadCatalog();
 const heading = title === undefined ? SITE.name : `${title} — ${SITE.name}`;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://ht.me");
+const canonical = original ?? new URL(Astro.url.pathname, Astro.site ?? "https://hatimej.com").href;
 ---
 
 <!doctype html>
@@ -26,7 +28,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? "https://ht.me");
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <title>{heading}</title>
         <meta name="description" content={description} />
-        <link rel="canonical" href={canonical.href} />
+        <link rel="canonical" href={canonical} />
         <meta name="author" content={SITE.name} />
         <meta property="og:title" content={heading} />
         <meta property="og:description" content={description} />

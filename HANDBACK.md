@@ -1,64 +1,46 @@
 # Handback
 
-Everything the build authored that is not yours, and what to do with it. The site
-prints a red **provisional records** stamp on the front and on the CV for as long as
-any of it is still in place, and the stamps remove themselves when it is gone.
+What the build left for you. The site prints a red **provisional records** stamp on
+the front for as long as any record carries `placeholder: true`; the stamp removes
+itself when they are gone.
 
-## 1. The thirteen records are illustrative
+## 1. Delete the thirteen illustrative records
 
-Every file under `src/content/` was written during the build to give the catalog a
-real lattice to render. They are in your domains and your registers, but they are not
-your writing. Each carries `placeholder: true` in its frontmatter, which is what
-prints "Provisional" on the card and keeps the stamp up.
+They were written during the first build and are not your work. Two of them
+(`forecasts/calibration-review-q2`, `forecasts/forecasting-my-own-projects`) state
+invented numbers about your record. Nothing real traces to them.
 
-| Class | Files |
-|---|---|
-| `research/` | compression-as-understanding, decidable-boundaries, invariants-you-cannot-name |
-| `poetry/` | legibility-of-loss, a-proof-with-nothing-to-prove, casablanca-in-october |
-| `forecasts/` | resolution-criteria-are-the-question, calibration-review-q2, forecasting-my-own-projects |
-| `notes/` | the-legitimacy-loop, on-being-wrong-in-public, half-ass-it-with-everything, what-a-drawer-is-for |
-
-Replace or delete them. When you add your own, drop `placeholder: true` from the
-frontmatter. One exception worth keeping: `notes/what-a-drawer-is-for` explains the
-tracing model to a first-time visitor, so it is worth rewriting rather than deleting.
-
-**The numbers in `forecasts/calibration-review-q2` and `forecasts/forecasting-my-own-projects`
-are invented.** Ninety-one resolved questions, the reliability figures, the twelve
-projects and their overrun multiples: none of it is real data. Delete or replace those
-two files before the site is public. They read as factual claims about your record.
-
-## 2. The CV is a structure with no facts in it
-
-`src/lib/authority.ts` holds the CV as a MARC-style authority record. The heading,
-variant names, fields of activity and location are real. Everything marked
-`provisional: true` is a prompt telling you what belongs there:
-
-- `373` associated group — institution, programme, dates
-- `374` occupation — current position and dates
-- `678` biographical data — education
-- `670` source data found — publications, preprints, talks, datasets
-
-Nothing was invented for these. An empty field is honest; delete a line rather than
-fill it with something plausible.
-
-## 3. Identity constants
-
-`src/lib/site.ts` carries the name and the public email in one place.
-
-```ts
-name: "Hatim El Jazouli",
-email: "hatim.eljazouli@proton.me",
+```
+git rm $(grep -rl '^placeholder: true' src/content)
 ```
 
-The surname was derived from your account of record, not stated by you, and the address
-is the one on that account. Change the constant if either is wrong or if you want a
-different public address.
+## 2. Read the tracing notes before sharing
 
-## 4. Deploy
+Every annotated tracing was drafted for you from the pieces themselves, in your
+voice. Rewrite any that don't say what you would say. They live in the `tracings:`
+frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
+`notes/steeped-in-paradoxes`, `notes/why-im-interested-in-ai-safety`, `notes/c`,
+`notes/exert-the-pursuit`, `research/context-tree-switching`,
+`research/cafa-6-protein-function-prediction`, `forecasts/betomcat`, `forecasts/viva`.
 
-`astro.config.mjs` sets `site: "https://ht.me"`. Change it if the domain differs; it
-feeds canonical URLs and Open Graph tags. No deploy target is configured. Any static
-host serves `dist/` as-is.
+## 3. Open items
+
+- **Approximate dates.** `research/hull-tactical-market-prediction` and
+  `forecasts/ensemble-forecasting-bot` are dated `2025-01-01`; the CV gives only the
+  year. Put the real month in.
+- **CTS has no code link.** `github.com/Enhso/cts` is an empty skeleton, so the record
+  doesn't link it. Push the implementation and add a `Code:` line.
+- **`iw` is public on GitHub** although its own handoff calls it private. The record
+  links it; drop the link or make the repo private if that's wrong.
+- **Optional additions.** `forecasts/betomcat`, `forecasts/intelligence-workbench` and
+  `forecasts/viva` come from public repos, not the CV. Delete any you don't want shown.
+
+## 4. Substack posts
+
+The nine records in `notes/` are verbatim mirrors of owmeloh.substack.com. Each has a
+`source:` URL, so its canonical link points at Substack and the page says where it
+was first published. To mirror a new post, copy its text into a new record with
+`source:` set.
 
 ## How to add a record
 
@@ -69,10 +51,11 @@ Create a Markdown file in the right directory:
 title: On the shape of a proof
 date: 2026-09-14
 summary: One or two sentences, transcribed as the card's note field.
+source: https://owmeloh.substack.com/p/on-the-shape-of-a-proof   # optional
 tracings:
-  - to: poetry/legibility-of-loss
+  - to: notes/calibrated-exposure
     note: Why these two belong together. Optional; leave it off when there is nothing to say.
-  - to: forecasts/calibration-review-q2
+  - to: forecasts/viva
 ---
 
 The body.

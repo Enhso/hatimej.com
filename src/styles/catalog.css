@@ -248,6 +248,10 @@ a:hover {
     text-decoration-color: var(--ribbon);
 }
 
+.read img {
+    max-width: min(100%, var(--measure));
+}
+
 .read code {
     font-family: var(--face-record);
     font-size: 0.85em;

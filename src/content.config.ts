@@ -32,6 +32,11 @@ const record = z.object({
     tracings: z.array(tracing).default([]),
     /** Pins a call number that would otherwise be assigned by date order. */
     callNumber: z.string().optional(),
+    /**
+     * Where the piece was first published. When set, the page's canonical URL
+     * points there and the record names it.
+     */
+    source: z.httpUrl().optional(),
     /** Marks an illustrative record authored during the build, awaiting real content. */
     placeholder: z.boolean().default(false),
 });

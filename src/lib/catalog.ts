@@ -24,6 +24,8 @@ export interface Entry {
     title: string;
     date: Date;
     summary?: string;
+    /** Where the piece was first published, when it appeared elsewhere first. */
+    source?: string;
     placeholder: boolean;
     klass: CatalogClass;
     /** Class mark plus sequence, e.g. `P203`. Keyable, and unique. */
@@ -101,6 +103,7 @@ export async function loadCatalog(): Promise<Catalog> {
                 title: item.data.title,
                 date: item.data.date,
                 summary: item.data.summary,
+                source: item.data.source,
                 placeholder: item.data.placeholder,
                 klass,
                 callNumber,

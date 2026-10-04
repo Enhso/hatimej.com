@@ -21,6 +21,7 @@ const { Content } = await render(entry.entry);
     title={entry.title}
     klass={entry.klass.id}
     description={entry.summary ?? `${entry.klass.label}, ${accession(entry.date)}.`}
+    canonical={entry.source}
 >
     <article class="record">
         <header class="card filed">
@@ -35,6 +36,11 @@ const { Content } = await render(entry.entry);
                     {entry.tracings.length === 1 ? " tracing" : " tracings"}.
                     {entry.placeholder && <span class="prov"> — Provisional record.</span>}
                 </p>
+                {entry.source && (
+                    <p class="statement">
+                        First published at <a href={entry.source}>{new URL(entry.source).hostname}</a>.
+                    </p>
+                )}
                 {entry.summary && <p class="summary">{entry.summary}</p>}
             </div>
         </header>
