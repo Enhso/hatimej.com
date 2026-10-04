@@ -32,7 +32,13 @@ const tracingTotal = traffic.crossTotal + traffic.withinTotal;
         <div><dt>Crossing class</dt><dd class="crossing">{traffic.crossTotal}</dd></div>
         <div>
             <dt>Last accession</dt>
-            <dd>{catalog.lastAccession ? accession(catalog.lastAccession) : "—"}</dd>
+            <dd>
+                {
+                    catalog.lastAccession
+                        ? accession(catalog.lastAccession.date, catalog.lastAccession.circa)
+                        : "—"
+                }
+            </dd>
         </div>
     </dl>
 

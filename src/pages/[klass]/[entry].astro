@@ -20,7 +20,7 @@ const { Content } = await render(entry.entry);
 <Catalog
     title={entry.title}
     klass={entry.klass.id}
-    description={entry.summary ?? `${entry.klass.label}, ${accession(entry.date)}.`}
+    description={entry.summary ?? `${entry.klass.label}, ${accession(entry.date, entry.circa)}.`}
     canonical={entry.source}
 >
     <article class="record">
@@ -31,7 +31,7 @@ const { Content } = await render(entry.entry);
             <div>
                 <h1 class="title">{entry.title}</h1>
                 <p class="statement">
-                    {entry.klass.label}. — {accession(entry.date)}. —{" "}
+                    {entry.klass.label}. — {accession(entry.date, entry.circa)}. —{" "}
                     {entry.tracings.length}
                     {entry.tracings.length === 1 ? " tracing" : " tracings"}.
                     {entry.placeholder && <span class="prov"> — Provisional record.</span>}

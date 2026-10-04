@@ -40,7 +40,7 @@ const { entries, heading, gloss } = Astro.props;
                             </h3>
 
                             <p class="statement">
-                                {entry.klass.label}. — {accession(entry.date)}.
+                                {entry.klass.label}. — {accession(entry.date, entry.circa)}.
                                 {entry.placeholder && <span class="prov"> — Provisional.</span>}
                             </p>
 

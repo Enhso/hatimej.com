@@ -23,6 +23,8 @@ export interface Entry {
     href: string;
     title: string;
     date: Date;
+    /** True when only the date's year is known; it prints as `c. YYYY`. */
+    circa: boolean;
     summary?: string;
     /** Where the piece was first published, when it appeared elsewhere first. */
     source?: string;
@@ -49,7 +51,8 @@ export interface Catalog {
     traffic: Traffic;
     /** True when any record in the build is still illustrative. */
     provisional: boolean;
-    lastAccession?: Date;
+    /** The most recent entry, kept whole so its `circa` flag survives to print. */
+    lastAccession?: Entry;
 }
 
 /** One cross-class tracing, flattened for printing on the cross-reference card. */
@@ -102,6 +105,7 @@ export async function loadCatalog(): Promise<Catalog> {
                 href: `/${klass.id}/${item.id}`,
                 title: item.data.title,
                 date: item.data.date,
+                circa: item.data.circa,
                 summary: item.data.summary,
                 source: item.data.source,
                 placeholder: item.data.placeholder,
@@ -152,7 +156,7 @@ export async function loadCatalog(): Promise<Catalog> {
         crossings,
         traffic: tabulate(entries),
         provisional: entries.some((entry) => entry.placeholder),
-        lastAccession: entries[0]?.date,
+        lastAccession: entries[0],
     };
 }
 
@@ -213,10 +217,11 @@ export function numeral(index: number): string {
  * Format a date as the catalog's accession form.
  *
  * @param date - The date to transcribe.
- * @returns An ISO calendar date, which is what a record carries.
+ * @param circa - True when the date is approximate and only its year may print.
+ * @returns An ISO calendar date, which is what a record carries, or `c. YYYY` when circa.
  */
-export function accession(date: Date): string {
-    return date.toISOString().slice(0, 10);
+export function accession(date: Date, circa = false): string {
+    return circa ? `c. ${date.getUTCFullYear()}` : date.toISOString().slice(0, 10);
 }
 
 export { classOf, CLASSES };

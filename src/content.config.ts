@@ -25,6 +25,11 @@ const tracing = z.object({
 const record = z.object({
     title: z.string(),
     date: z.coerce.date(),
+    /**
+     * The date is approximate. It still orders the record and its call number,
+     * but only its year is printed, as `c. 2023`.
+     */
+    circa: z.boolean().default(false),
     /** Drafts are excluded from the build and from the link graph entirely. */
     draft: z.boolean().default(false),
     /** Transcribed as the card's note field. One or two sentences. */

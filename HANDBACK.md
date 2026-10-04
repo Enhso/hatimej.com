@@ -14,9 +14,6 @@ frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
 
 ## 2. Open items
 
-- **Approximate dates.** `research/hull-tactical-market-prediction` and
-  `forecasts/ensemble-forecasting-bot` are dated `2025-01-01`; the CV gives only the
-  year. Put the real month in.
 - **CTS has no code link.** `github.com/Enhso/cts` is an empty skeleton, so the record
   doesn't link it. Push the implementation and add a `Code:` line.
 - **`iw` is public on GitHub** although its own handoff calls it private. The record
@@ -24,7 +21,14 @@ frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
 - **Optional additions.** `forecasts/betomcat`, `forecasts/intelligence-workbench` and
   `forecasts/viva` come from public repos, not the CV. Delete any you don't want shown.
 
-## 3. Substack posts
+## 3. Poetry
+
+The poems in `poetry/` are transcribed from screenshots of the original posts. Dates
+shown to the day come from the posts; those from late February 2023 were worked out
+from relative stamps ("3d") and may be off by a day. Undated poems carry
+`circa: true` and print as "c. 2023".
+
+## 4. Substack posts
 
 The nine records in `notes/` are verbatim mirrors of owmeloh.substack.com. Each has a
 `source:` URL, so its canonical link points at Substack and the page says where it
@@ -39,6 +43,7 @@ Create a Markdown file in the right directory:
 ---
 title: On the shape of a proof
 date: 2026-09-14
+circa: true   # optional; the date is approximate, so only its year prints ("c. 2026")
 summary: One or two sentences, transcribed as the card's note field.
 source: https://owmeloh.substack.com/p/on-the-shape-of-a-proof   # optional
 tracings:
