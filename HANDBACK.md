@@ -1,20 +1,9 @@
 # Handback
 
 What the build left for you. The site prints a red **provisional records** stamp on
-the front for as long as any record carries `placeholder: true`; the stamp removes
-itself when they are gone.
+the front for as long as any record carries `placeholder: true`; none does now.
 
-## 1. Delete the thirteen illustrative records
-
-They were written during the first build and are not your work. Two of them
-(`forecasts/calibration-review-q2`, `forecasts/forecasting-my-own-projects`) state
-invented numbers about your record. Nothing real traces to them.
-
-```
-git rm $(grep -rl '^placeholder: true' src/content)
-```
-
-## 2. Read the tracing notes before sharing
+## 1. Read the tracing notes before sharing
 
 Every annotated tracing was drafted for you from the pieces themselves, in your
 voice. Rewrite any that don't say what you would say. They live in the `tracings:`
@@ -23,7 +12,7 @@ frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
 `notes/exert-the-pursuit`, `research/context-tree-switching`,
 `research/cafa-6-protein-function-prediction`, `forecasts/betomcat`, `forecasts/viva`.
 
-## 3. Open items
+## 2. Open items
 
 - **Approximate dates.** `research/hull-tactical-market-prediction` and
   `forecasts/ensemble-forecasting-bot` are dated `2025-01-01`; the CV gives only the
@@ -35,7 +24,7 @@ frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
 - **Optional additions.** `forecasts/betomcat`, `forecasts/intelligence-workbench` and
   `forecasts/viva` come from public repos, not the CV. Delete any you don't want shown.
 
-## 4. Substack posts
+## 3. Substack posts
 
 The nine records in `notes/` are verbatim mirrors of owmeloh.substack.com. Each has a
 `source:` URL, so its canonical link points at Substack and the page says where it
