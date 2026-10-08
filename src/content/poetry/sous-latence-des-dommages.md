@@ -1,6 +1,7 @@
 ---
 title: "sous-latence des dommages"
 date: 2023-02-20
+lang: fr
 ---
 
 <pre class="verse">

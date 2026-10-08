@@ -1,6 +1,7 @@
 ---
 title: "murin comme richissime"
 date: 2023-02-21
+lang: fr
 ---
 
 <pre class="verse">

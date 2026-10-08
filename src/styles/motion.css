@@ -1,0 +1,301 @@
+/* ==========================================================================
+   Motion
+
+   Flicked, not eased. Every change of state here is a held frame: keyframes
+   step with steps(1, end) or a stepped timing function, and nothing fades,
+   blurs, shadows or rounds. Red appears only on the typewriter's caret.
+
+   Nothing travels past home and comes back: positional motion goes one way
+   and lands, and a stamp may undershoot its size once. Cards, fields and
+   items never move on scroll; only their small marks are struck.
+
+     The opening     tabs, typed heading, stamped numbers, drawn strings,
+                     flicked-in records, under html[data-opening]
+     Navigation      tab marks lift on touch, the current mark is struck on
+                     return loads, call numbers / tags / numerals are struck
+                     as their record scrolls in, the theme swaps as a wipe,
+                     a missed lookup shakes
+     Irregularities  motion.ts sets the properties used below: marks resting
+                     a degree off true, one misfiled card, tab marks lifting
+                     by a random amount
+
+   The opening is scoped under html[data-opening], which the head script sets
+   once per session and motion.ts removes when it is over. Every opening
+   animation holds its first frame through its delay (fill backwards) and ends
+   on the page's natural state, so a page whose script never arrives still
+   finishes the sequence on its own and is left exactly as it was drawn. Only
+   the caret fills forwards, because it has to end hidden.
+
+   Every rule that moves anything sits inside no-preference. Under reduced
+   motion nothing here applies at all, which is the natural state.
+   ========================================================================== */
+
+:root {
+    --hold: 60ms; /* one held frame */
+    --flick-dur: calc(var(--hold) * 3);
+    --stamp-dur: calc(var(--hold) * 4);
+
+    /* When each part of the opening begins. */
+    --at-tabs: 0ms;
+    --at-type: 150ms;
+    --at-flick: 650ms;
+    --at-stamp: 700ms;
+    --at-draw: 900ms;
+}
+
+/* ==========================================================================
+   Keyframes
+   ========================================================================== */
+
+/* A card flicked into its drawer: held low, closer, home. */
+@keyframes flick {
+    0% { transform: translateY(0.5rem); }
+    34% { transform: translateY(0.25rem); }
+    67% { transform: translateY(0.0625rem); }
+    100% { transform: none; }
+}
+
+/* A rubber stamp struck on a blank: nothing, then oversized and askew, one
+   undershoot, home. Rotation only ever closes on zero. --peak lets one number
+   hit harder than the rest. */
+@keyframes stamp-in {
+    0% { transform: scale(0) rotate(-5deg); }
+    1% { transform: scale(var(--peak, 1.6)) rotate(-5deg); }
+    50% { transform: scale(0.95) rotate(-2deg); }
+    100% { transform: none; }
+}
+
+/* The same strike on a mark that is already on the page. */
+@keyframes stamp-pop {
+    0% { transform: scale(1.4) rotate(-4deg); }
+    50% { transform: scale(0.96) rotate(-1.5deg); }
+    100% { transform: none; }
+}
+
+/* The typewriter. The clip reaches half an em past the reveal edge, exactly
+   where the caret sits, so the caret shows and the next letter does not. This
+   is the regular fallback; motion.ts types by hand over the top of it. */
+@keyframes type {
+    from { clip-path: inset(-0.2em calc(100% - 0.5em) -0.2em 0); }
+    to { clip-path: inset(-0.2em -0.5em -0.2em 0); }
+}
+
+@keyframes caret-move {
+    from { inset-inline-start: 0; }
+    to { inset-inline-start: 100%; }
+}
+
+/* Two blinks once the line is typed, then gone. */
+@keyframes caret-blink {
+    0% { visibility: visible; }
+    25% { visibility: hidden; }
+    50% { visibility: visible; }
+    75%, 100% { visibility: hidden; }
+}
+
+@keyframes draw-x {
+    from { transform: scaleX(0); }
+    to { transform: none; }
+}
+
+@keyframes draw-y {
+    from { transform: scaleY(0); }
+    to { transform: none; }
+}
+
+/* The sheet pulled through the machine: the new stock arrives top first. */
+@keyframes wipe {
+    from { clip-path: inset(0 0 100% 0); }
+    to { clip-path: inset(0); }
+}
+
+@keyframes shake {
+    0% { transform: translateX(-0.25rem); }
+    20% { transform: translateX(0.25rem); }
+    40% { transform: translateX(-0.1875rem); }
+    60% { transform: translateX(0.125rem); }
+    80% { transform: translateX(-0.0625rem); }
+    100% { transform: none; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    /* ======================================================================
+       The opening. --i is a place in line and --j a few milliseconds of
+       jitter; motion.ts sets both, and 0 stands in until it does.
+       ================================================================== */
+
+    /* 1. Guide tabs flick up one after another, in whatever order motion.ts
+       shuffles them to. */
+    html[data-opening] .tab {
+        animation: flick var(--flick-dur) steps(1, end) backwards;
+        animation-delay: max(0ms, calc(var(--at-tabs) + var(--i, 0) * var(--hold) + var(--j, 0ms)));
+    }
+
+    html[data-opening] .tab:nth-child(2) { --i: 1; }
+    html[data-opening] .tab:nth-child(3) { --i: 2; }
+    html[data-opening] .tab:nth-child(4) { --i: 3; }
+    html[data-opening] .tab:nth-child(5) { --i: 4; }
+    html[data-opening] .tab:nth-child(6) { --i: 5; }
+    html[data-opening] .tab:nth-child(7) { --i: 6; }
+    html[data-opening] .tab:nth-child(8) { --i: 7; }
+
+    /* 2. The page's heading is typed. This is the regular version, one step to
+       a letter, which motion.ts sizes with --chars (12 stands in until it
+       does). The heading shrinks to its text so the reveal runs the length of
+       the letters and not of the column. Once motion.ts sets data-typed it
+       types by hand instead and these animations stand down. */
+    html[data-opening]
+        :is(.guide .name, .authority .name, .sheet > .register .heading, .miss h1, .record .title):not([data-wrapped]) {
+        --type-dur: min(calc(var(--chars, 12) * 36ms), 640ms);
+        position: relative;
+        inline-size: fit-content;
+        animation: type var(--type-dur) steps(var(--chars, 12), end) var(--at-type) backwards;
+
+        &::after {
+            content: "";
+            position: absolute;
+            inset-block: 0.05em;
+            inline-size: 0.5em;
+            background: var(--ribbon);
+            animation:
+                caret-move var(--type-dur) steps(var(--chars, 12), end) var(--at-type) both,
+                caret-blink calc(var(--hold) * 8) steps(1, end) calc(var(--at-type) + var(--type-dur)) both;
+        }
+
+        &[data-typed],
+        &[data-typed]::after {
+            animation: none;
+        }
+    }
+
+    /* A heading that wraps cannot be typed on one line; it flicks in instead. */
+    html[data-opening] [data-wrapped] {
+        animation: flick var(--flick-dur) steps(1, end) var(--at-type) backwards;
+    }
+
+    /* 3. Numbers are stamped down, the front's extent first, then the matrix.
+       The last accession hits hardest. motion.ts numbers them in reading order. */
+    html[data-opening] .extent dd,
+    html[data-opening] .traffic td.count {
+        animation: stamp-in var(--stamp-dur) steps(1, end) backwards;
+    }
+
+    html[data-opening] .extent dd {
+        animation-delay: max(0ms, calc(var(--at-stamp) + var(--i, 0) * 70ms + var(--j, 0ms)));
+    }
+
+    html[data-opening] .extent div:last-child dd {
+        --peak: 2;
+    }
+
+    /* The cells are small and share borders, so they strike less wildly. */
+    html[data-opening] .traffic td.count {
+        --peak: 1.35;
+        animation-delay: max(
+            0ms,
+            calc(var(--at-stamp) + 150ms + min(var(--i, 0), 24) * 20ms + var(--j, 0ms))
+        );
+    }
+
+    /* 4. The red connectors between two records are drawn in six steps. */
+    html[data-opening] .seealso .link {
+        transform-origin: 0 50%;
+        animation: draw-x var(--stamp-dur) steps(6, end) backwards;
+        animation-delay: max(0ms, calc(var(--at-draw) + min(var(--i, 0), 7) * 45ms + var(--j, 0ms)));
+    }
+
+    /* On a phone the connectors run down the page, so they are drawn down it. */
+    @media (max-width: 46rem) {
+        html[data-opening] .seealso .link {
+            transform-origin: 50% 0;
+            animation-name: draw-y;
+        }
+    }
+
+    /* 5. Records in the first viewport flick in; motion.ts flags them. */
+    html[data-opening] [data-flick] {
+        animation: flick var(--flick-dur) steps(1, end) backwards;
+        animation-delay: max(0ms, calc(var(--at-flick) + var(--i, 0) * 40ms + var(--j, 0ms)));
+    }
+
+    /* ======================================================================
+       Navigation
+       ================================================================== */
+
+    /* 6. A guide tab's mark lifts when touched and drops back when left.
+       motion.ts sets --lift and --tilt afresh on each touch. */
+    .tab-code {
+        transition:
+            translate calc(var(--hold) * 2) steps(4, end),
+            rotate calc(var(--hold) * 2) steps(4, end);
+    }
+
+    .tab:hover .tab-code,
+    .tab:focus-visible .tab-code {
+        translate: 0 calc(var(--lift, 4px) * -1);
+        rotate: calc(var(--askew, 0deg) + var(--tilt, 0deg));
+    }
+
+    /* 7. On any load that is not the opening, the current drawer's mark is
+       struck once. The head script sets data-returning on those loads. */
+    html[data-returning] .tab[aria-current="page"] .tab-code {
+        animation: stamp-pop var(--stamp-dur) steps(1, end) backwards;
+    }
+
+    /* 8. Records that start below the fold never move. When one arrives, only
+       its mark is struck: the register's call number, the authority's tag, the
+       apparatus's numeral. Inline marks need a box to turn, and only for as
+       long as the strike lasts; motion.ts clears data-pop when it ends. */
+    [data-pop] :is(.rail .call, .tag, .numeral) {
+        display: inline-block;
+        animation: stamp-pop var(--stamp-dur) steps(1, end);
+    }
+
+    /* 9. Marks that rest a degree off true. The inline-block is permanent here,
+       so the call number's hover underline, a border, must not grow the line. */
+    [data-askew] {
+        display: inline-block;
+        rotate: var(--askew);
+    }
+
+    .rail .call[data-askew]:hover {
+        margin-block-end: -1px;
+    }
+
+    /* 10. One card was misfiled. It rests askew from the start, then straightens
+       in two held frames the first time it is touched, and stays straight. The
+       transition belongs to the straight state so it only runs on the way in. */
+    .card[data-misfiled] {
+        translate: var(--mis-x) 0;
+        rotate: var(--mis-r);
+    }
+
+    .card[data-misfiled][data-straight] {
+        translate: none;
+        rotate: none;
+        transition:
+            translate calc(var(--hold) * 2) steps(2, end),
+            rotate calc(var(--hold) * 2) steps(2, end);
+    }
+
+    /* 11. The negative and the positive swap as a stepped wipe. The old page is
+       held still beneath it, and both layers drop the default additive blend,
+       which would burn the overlap out to white. */
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        mix-blend-mode: normal;
+    }
+
+    ::view-transition-old(root) {
+        animation: none;
+    }
+
+    ::view-transition-new(root) {
+        animation: wipe var(--stamp-dur) steps(6, end) both;
+    }
+
+    /* 12. A call number that matches nothing shakes the field. */
+    .lookup input[data-miss] {
+        animation: shake calc(var(--hold) * 3.5) steps(1, end);
+    }
+}

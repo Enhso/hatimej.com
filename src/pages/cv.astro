@@ -16,16 +16,12 @@ const byClass = catalog.traffic.classes.map((klass) => ({
 
 <Catalog
     title="Authority record"
-    description={`Authority record for ${SITE.name}: established heading, fields of activity, and the works catalogued under it.`}
+    description={`${SITE.name}: data scientist, forecaster, poet on the side. Heading established 1996, still under revision.`}
 >
     <article class="authority">
         <header class="banner">
             <h1 class="name signage">{SITE.name}</h1>
-            <p class="gloss">
-                A library keeps one of these for every person it catalogues: the
-                established heading, its variant forms, and the sources each fact
-                was found in. This is the curriculum vitae, kept the same way.
-            </p>
+            <p class="gloss">Still under revision.</p>
         </header>
 
         <dl class="fields">
@@ -84,7 +80,7 @@ const byClass = catalog.traffic.classes.map((klass) => ({
                 </dt>
                 <dd class="lines">
                     <p class="line">
-                        <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
+                        <a href={`mailto:${SITE.email}`}>Email</a>
                     </p>
                     {
                         SITE.links.map((link) => (
@@ -162,7 +158,7 @@ const byClass = catalog.traffic.classes.map((klass) => ({
         text-transform: uppercase;
         letter-spacing: 0.09em;
         font-weight: 700;
-        font-size: 0.5rem;
+        font-size: 0.5625rem;
         color: var(--ink-soft);
         text-align: end;
     }
@@ -186,7 +182,7 @@ const byClass = catalog.traffic.classes.map((klass) => ({
         border-block-start: var(--rule-hair);
     }
 
-    /* Wide enough for "2026 – present", the longest range, without wrapping. */
+    /* Wide enough for "2024 – 2027", the longest range, without wrapping. */
     .when {
         flex: 0 0 14ch;
         white-space: nowrap;

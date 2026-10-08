@@ -7,6 +7,9 @@ import Register from "../components/Register.astro";
 import { loadCatalog } from "../lib/catalog";
 
 const catalog = await loadCatalog();
+
+/** Cards the front prints. Everything older is reached through its drawer. */
+const RECENT = 7;
 ---
 
 <Catalog>
@@ -15,9 +18,9 @@ const catalog = await loadCatalog();
         <Traffic traffic={catalog.traffic} />
         <SeeAlso crossings={catalog.crossings} />
         <Register
-            entries={catalog.entries}
-            heading="The drawer"
-            gloss="Every record, most recent accession first. A call number addresses a record; type one in the field above to go to it."
+            entries={catalog.entries.slice(0, RECENT)}
+            heading="Recent accessions"
+            gloss="The seven newest. Older cards stay in their drawers. Know a call number? Punch it in above."
         />
     </div>
 </Catalog>

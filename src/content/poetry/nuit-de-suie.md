@@ -1,6 +1,10 @@
 ---
 title: "Nuit de suie"
 date: 2023-02-24
+lang: fr
+tracings:
+  - to: notes/b
+    note: "The poem writes through the ennui that follows a black night. Two years later B takes the other exit: sleep as escape."
 ---
 
 <pre class="verse">

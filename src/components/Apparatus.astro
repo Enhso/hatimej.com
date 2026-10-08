@@ -49,7 +49,7 @@ const bands: { heading: string; gloss: string; tracings: ResolvedTracing[] }[] =
                                     data-target-ref={tracing.target.ref}
                                 >
                                     <span class="call">{tracing.target.callNumber}</span>
-                                    <span class="ref-title">{tracing.target.title}</span>
+                                    <span class="ref-title" lang={tracing.target.lang}>{tracing.target.title}</span>
                                 </a>
                                 <span class="klass">{tracing.target.klass.label}</span>
                                 {tracing.note !== undefined && (

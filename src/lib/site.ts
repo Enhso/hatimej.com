@@ -1,8 +1,8 @@
 /**
  * Identity of record for the catalog.
  *
- * `email` is the principal's address of record, published here because the
- * graduate-admissions audience needs a direct line. Change this one constant to
+ * `email` is the principal's address of record. Pages print it as a link
+ * labelled "Email", never as the bare address. Change this one constant to
  * publish a different address; it is the only place the address appears.
  *
  * `links` are the principal's public profiles, printed after the address on the
@@ -16,8 +16,9 @@ export const SITE = {
         { label: "GitHub", href: "https://github.com/Enhso" },
         { label: "LinkedIn", href: "https://www.linkedin.com/in/hatim-el-jazouli" },
         { label: "Metaculus", href: "https://www.metaculus.com/accounts/profile/198568/" },
+        { label: "X", href: "https://x.com/Le_Hant" },
     ],
     location: "Casablanca",
     description:
-        "A catalog of work in formal methods, poetry, forecasting and notes, indexed by the cross-references between the pieces themselves.",
+        "A catalog of work in formal methods, poetry, forecasting, notes and side quests, indexed by the cross-references between the pieces themselves.",
 } as const;

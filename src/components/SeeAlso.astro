@@ -13,9 +13,7 @@ const annotated = crossings.filter((crossing) => crossing.note !== undefined).le
     <header class="banner">
         <h2 class="signage" id="seealso-heading">See also</h2>
         <p class="gloss">
-            Every tracing in this catalog that leaves one class and arrives in
-            another. {annotated} of {crossings.length} carry the reason they were
-            drawn.
+            Red string between drawers. {`${annotated} of ${crossings.length} ${annotated === 1 ? "comes" : "come"} with a note.`}
         </p>
     </header>
 
@@ -45,8 +43,10 @@ const annotated = crossings.filter((crossing) => crossing.note !== undefined).le
                             data-target-ref={crossing.target.ref}
                         >
                             <span class="call">{crossing.source.callNumber}</span>
-                            <span class="end-title">{crossing.source.title}</span>
+                            <span class="end-title" lang={crossing.source.lang}>{crossing.source.title}</span>
                         </a>
+
+                        <span class="vh"> connects to </span>
 
                         <span class="link" aria-hidden="true" />
 
@@ -58,7 +58,7 @@ const annotated = crossings.filter((crossing) => crossing.note !== undefined).le
                             data-target-ref={crossing.target.ref}
                         >
                             <span class="call">{crossing.target.callNumber}</span>
-                            <span class="end-title">{crossing.target.title}</span>
+                            <span class="end-title" lang={crossing.target.lang}>{crossing.target.title}</span>
                         </a>
 
                         {crossing.note !== undefined && <p class="note">{crossing.note}</p>}

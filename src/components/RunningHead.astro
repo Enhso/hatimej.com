@@ -9,7 +9,8 @@ interface Props {
 
 const { entries } = Astro.props;
 const here = Astro.url.pathname;
-const drawer = here.split("/")[1] ?? "";
+// The static build reports "/cv.html" where dev reports "/cv".
+const drawer = here.split("/")[1]?.replace(/\.html$/, "") ?? "";
 ---
 
 <header class="head">
@@ -72,8 +73,8 @@ const drawer = here.split("/")[1] ?? "";
                     }
                 </datalist>
             </form>
-            <button class="stat signage" type="button" data-theme-toggle aria-pressed="false">
-                <span data-theme-label>Negative</span>
+            <button class="stat signage" type="button" data-theme-toggle>
+                <span class="vh">Switch to </span><span data-theme-label>Negative</span>
             </button>
         </div>
     </div>
@@ -142,6 +143,12 @@ const drawer = here.split("/")[1] ?? "";
         transition: color var(--flick);
     }
 
+    /* The authority tab is no class, so it takes the default ink mark and never
+       the colour the page it sits on has set on the document. */
+    .tab:not([data-class]) {
+        --tab: initial;
+    }
+
     .tab-code {
         display: inline-grid;
         place-items: center;
@@ -186,7 +193,7 @@ const drawer = here.split("/")[1] ?? "";
     }
 
     .lookup label {
-        font-size: 0.625rem;
+        font-size: 0.6875rem;
         color: var(--ink-soft);
     }
 
@@ -219,7 +226,7 @@ const drawer = here.split("/")[1] ?? "";
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.09em;
-        font-size: 0.625rem;
+        font-size: 0.6875rem;
         color: var(--ink-soft);
         background: none;
         border: 0;
@@ -249,8 +256,16 @@ const drawer = here.split("/")[1] ?? "";
             display: none;
         }
 
+        /* With the heading gone the mark alone says which drawer is open: a
+           rule beneath it in the tab's own colour. Every tab reserves the rule,
+           so only the current one prints it. */
         .tab {
             padding-inline-end: calc(var(--u) * 0.4);
+            border-block-end: 2px solid transparent;
+        }
+
+        .tab[aria-current="page"] {
+            border-block-end-color: var(--tab, var(--ink));
         }
     }
 </style>

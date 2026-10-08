@@ -1,6 +1,7 @@
 ---
 title: "Court changement"
 date: 2023-02-23
+lang: fr
 ---
 
 <pre class="verse">

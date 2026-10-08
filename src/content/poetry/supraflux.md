@@ -1,6 +1,7 @@
 ---
 title: "supraflux"
 date: 2023-02-22
+lang: fr
 ---
 
 <pre class="verse">

@@ -1,5 +1,6 @@
 ---
 import "../styles/catalog.css";
+import "../styles/motion.css";
 import RunningHead from "../components/RunningHead.astro";
 import Foot from "../components/Foot.astro";
 import { SITE } from "../lib/site";
@@ -44,6 +45,24 @@ const canonical = original ?? new URL(Astro.url.pathname, Astro.site ?? "https:/
             } catch {
                 /* Storage can throw in private windows; the media query covers it. */
             }
+
+            // The opening plays once per browser session, on whichever page loads
+            // first. Reduced motion, and any browser that cannot keep the flag,
+            // skip it; every other load is a return visit.
+            {
+                let opening = false;
+                try {
+                    opening =
+                        !matchMedia("(prefers-reduced-motion: reduce)").matches &&
+                        sessionStorage.getItem("catalog-opened") === null;
+                    if (opening) {
+                        sessionStorage.setItem("catalog-opened", "1");
+                    }
+                } catch {
+                    opening = false;
+                }
+                document.documentElement.dataset[opening ? "opening" : "returning"] = "";
+            }
         </script>
     </head>
     <body>
@@ -55,6 +74,10 @@ const canonical = original ?? new URL(Astro.url.pathname, Astro.site ?? "https:/
         <Foot />
         <script>
             import "../scripts/catalog";
+        </script>
+        {/* Its own bundle: motion is decoration and must not be able to take the lookup down. */}
+        <script>
+            import "../scripts/motion";
         </script>
     </body>
 </html>

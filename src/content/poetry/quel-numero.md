@@ -1,6 +1,7 @@
 ---
 title: "Quel numéro"
 date: 2023-02-03
+lang: fr
 ---
 
 <pre class="verse">

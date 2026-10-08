@@ -1,6 +1,9 @@
 ---
 title: "Nods in Hays"
 date: 2023-04-08
+tracings:
+  - to: notes/the-noise-is-the-system
+    note: "The poem asks the noisy world for a tranquil mind. Three years later the essay stops asking: the noise is the sound of the system working."
 ---
 
 <pre class="verse">

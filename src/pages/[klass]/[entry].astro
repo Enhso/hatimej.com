@@ -29,7 +29,7 @@ const { Content } = await render(entry.entry);
                 <span class="call">{entry.callNumber}</span>
             </div>
             <div>
-                <h1 class="title">{entry.title}</h1>
+                <h1 class="title" lang={entry.lang}>{entry.title}</h1>
                 <p class="statement">
                     {entry.klass.label}. — {accession(entry.date, entry.circa)}. —{" "}
                     {entry.tracings.length}
@@ -47,7 +47,7 @@ const { Content } = await render(entry.entry);
 
         <div class="filed">
             <div class="rail" aria-hidden="true"></div>
-            <div class="read">
+            <div class="read" lang={entry.lang}>
                 <Content />
             </div>
         </div>

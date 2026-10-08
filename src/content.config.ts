@@ -34,6 +34,8 @@ const record = z.object({
     draft: z.boolean().default(false),
     /** Transcribed as the card's note field. One or two sentences. */
     summary: z.string().optional(),
+    /** Language of the piece when it is not English, as a BCP 47 tag, e.g. `fr`. */
+    lang: z.string().optional(),
     tracings: z.array(tracing).default([]),
     /** Pins a call number that would otherwise be assigned by date order. */
     callNumber: z.string().optional(),
@@ -63,4 +65,5 @@ export const collections = {
     poetry: drawer("poetry"),
     forecasts: drawer("forecasts"),
     notes: drawer("notes"),
+    quests: drawer("quests"),
 };

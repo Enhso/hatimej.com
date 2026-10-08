@@ -10,12 +10,15 @@ voice. Rewrite any that don't say what you would say. They live in the `tracings
 frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
 `notes/steeped-in-paradoxes`, `notes/why-im-interested-in-ai-safety`, `notes/c`,
 `notes/exert-the-pursuit`, `research/context-tree-switching`,
-`research/cafa-6-protein-function-prediction`, `forecasts/betomcat`, `forecasts/viva`.
+`quests/cafa-6-protein-function-prediction`, `forecasts/betomcat`, `forecasts/viva`.
+
+Three poems now trace to the essays they sit beside, and those notes are drafts too:
+`poetry/nods-in-hays` → `notes/the-noise-is-the-system`, `poetry/clean-as-vile` →
+`notes/calibrated-exposure`, and `poetry/nuit-de-suie` → `notes/b`. Rewrite the notes,
+change the targets, or delete a tracing if the link isn't one you'd make.
 
 ## 2. Open items
 
-- **CTS has no code link.** `github.com/Enhso/cts` is an empty skeleton, so the record
-  doesn't link it. Push the implementation and add a `Code:` line.
 - **`iw` is public on GitHub** although its own handoff calls it private. The record
   links it; drop the link or make the repo private if that's wrong.
 - **Optional additions.** `forecasts/betomcat`, `forecasts/intelligence-workbench` and
@@ -26,7 +29,8 @@ frontmatter of: `notes/the-noise-is-the-system`, `notes/calibrated-exposure`,
 The poems in `poetry/` are transcribed from screenshots of the original posts. Dates
 shown to the day come from the posts; those from late February 2023 were worked out
 from relative stamps ("3d") and may be off by a day. Undated poems carry
-`circa: true` and print as "c. 2023".
+`circa: true` and print as "c. 2023". French poems carry `lang: fr`. A poem's card prints
+its opening lines, taken from the first stanza of more than one line, at most four.
 
 ## 4. Substack posts
 
@@ -45,6 +49,7 @@ title: On the shape of a proof
 date: 2026-09-14
 circa: true   # optional; the date is approximate, so only its year prints ("c. 2026")
 summary: One or two sentences, transcribed as the card's note field.
+lang: fr      # optional; set it when the piece is not in English
 source: https://owmeloh.substack.com/p/on-the-shape-of-a-proof   # optional
 tracings:
   - to: notes/calibrated-exposure

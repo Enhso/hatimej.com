@@ -2,6 +2,7 @@
 title: "La ronde à dix"
 date: 2023-01-01
 circa: true
+lang: fr
 ---
 
 <pre class="verse">

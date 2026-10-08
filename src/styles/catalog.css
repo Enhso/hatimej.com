@@ -32,6 +32,7 @@
     --tab-p: #7a2e6d;
     --tab-f: #8a4e00;
     --tab-n: #1f6b4a;
+    --tab-q: #00657a;
 
     /* --- Faces ------------------------------------------------------------ */
     --face-signage: "Libre Franklin Variable", "Libre Franklin", "Helvetica Neue",
@@ -72,6 +73,7 @@
         --tab-p: #c98bc0;
         --tab-f: #e0a040;
         --tab-n: #57ba8c;
+        --tab-q: #4cc3d9;
     }
 }
 
@@ -89,6 +91,7 @@
     --tab-p: #c98bc0;
     --tab-f: #e0a040;
     --tab-n: #57ba8c;
+    --tab-q: #4cc3d9;
 }
 
 /* Class marks resolve their own tab colour, so a new class needs one variable
@@ -97,6 +100,7 @@
 [data-class="poetry"] { --tab: var(--tab-p); }
 [data-class="forecasts"] { --tab: var(--tab-f); }
 [data-class="notes"] { --tab: var(--tab-n); }
+[data-class="quests"] { --tab: var(--tab-q); }
 
 /* ==========================================================================
    Base
@@ -168,6 +172,17 @@ a {
 
 a:hover {
     text-decoration-color: var(--ribbon);
+}
+
+/* Read aloud, never drawn: words a screen reader needs where the page relies
+   on a rule or a position to say them. */
+.vh {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
 }
 
 /* ==========================================================================

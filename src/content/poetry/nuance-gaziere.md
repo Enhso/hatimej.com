@@ -1,6 +1,7 @@
 ---
 title: "(t) nuance gazière"
 date: 2023-02-24
+lang: fr
 ---
 
 <pre class="verse">

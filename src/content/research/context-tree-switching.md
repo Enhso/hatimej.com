@@ -7,9 +7,12 @@ tracings:
     note: "Both combine many predictors instead of trusting one. CTS mixes context models as data arrives; the bot combines forecasts from different personas."
 ---
 
-Context Tree Switching (CTS) is an algorithm for sequential prediction, and this
-project is an implementation of it written from scratch in Python.
+Context Tree Switching (CTS; Veness et al., 2012) is an algorithm for sequential
+prediction, and this project is an implementation of it written from scratch in
+Python.
 
 It was written for sequential-prediction research, as part of work on AIXI.
 
 Built with: Python.
+
+Code: [github.com/Enhso/cts](https://github.com/Enhso/cts)

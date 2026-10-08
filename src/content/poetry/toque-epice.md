@@ -1,6 +1,7 @@
 ---
 title: "toque épicé"
 date: 2023-02-22
+lang: fr
 ---
 
 <pre class="verse">

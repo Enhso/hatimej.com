@@ -148,6 +148,19 @@ function resolveCall(typed: string): string | null {
     return null;
 }
 
+/**
+ * Shake the field when the lookup misses. The shake is stepped CSS in
+ * motion.css, run off this attribute; taking it away and forcing a reflow lets
+ * a second miss in a row start the shake over.
+ *
+ * @param input - The call-number field.
+ */
+function shake(input: HTMLInputElement): void {
+    input.removeAttribute("data-miss");
+    void input.offsetWidth;
+    input.dataset.miss = "";
+}
+
 if (lookup !== null && field !== null) {
     root.dataset.ready = "";
 
@@ -157,6 +170,7 @@ if (lookup !== null && field !== null) {
         if (href === null) {
             field.setCustomValidity("No record carries that call number.");
             field.reportValidity();
+            shake(field);
             return;
         }
         window.location.assign(href);
@@ -204,21 +218,33 @@ function markToggle(): void {
     if (toggle === null || toggleLabel === null) {
         return;
     }
-    const negative = isNegative();
-    toggle.setAttribute("aria-pressed", String(negative));
-    toggleLabel.textContent = negative ? "Positive" : "Negative";
+    toggleLabel.textContent = isNegative() ? "Positive" : "Negative";
 }
 
 if (toggle !== null) {
     markToggle();
     toggle.addEventListener("click", () => {
         const next = isNegative() ? "light" : "dark";
-        root.dataset.theme = next;
+        const apply = (): void => {
+            root.dataset.theme = next;
+            markToggle();
+        };
         try {
             localStorage.setItem("catalog-theme", next);
         } catch {
             /* A refused write only costs the choice on the next page. */
         }
-        markToggle();
+
+        // Where the browser can hold the old page still, the switch arrives as
+        // the stepped wipe in motion.css. Otherwise, or under reduced motion,
+        // it is instant.
+        const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!still && typeof document.startViewTransition === "function") {
+            document.startViewTransition(apply).ready.catch(() => {
+                /* A skipped transition rejects here; the theme still switches. */
+            });
+        } else {
+            apply();
+        }
     });
 }

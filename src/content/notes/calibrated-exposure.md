@@ -6,7 +6,7 @@ source: "https://owmeloh.substack.com/p/calibrated-exposure"
 tracings:
   - to: notes/steeped-in-paradoxes
     note: "This essay ends by choosing football analytics. A week later, this is what that interest sounds like on the page."
-  - to: research/hull-tactical-market-prediction
+  - to: quests/hull-tactical-market-prediction
     note: "The essay says I finally started building market models. This is one of them."
 ---
 

@@ -25,6 +25,7 @@ export const CLASSES: readonly CatalogClass[] = [
     { id: "poetry", code: "P", heading: "POETRY", label: "Poetry" },
     { id: "forecasts", code: "F", heading: "FORECASTING", label: "Forecasting" },
     { id: "notes", code: "N", heading: "NOTES", label: "Notes" },
+    { id: "quests", code: "Q", heading: "SIDE QUESTS", label: "Side quests" },
 ] as const;
 
 const BY_ID = new Map(CLASSES.map((klass) => [klass.id, klass]));
@@ -45,4 +46,4 @@ export function classOf(id: string): CatalogClass {
 }
 
 /** Collection names, in schedule order. Narrowed for `getCollection`. */
-export type ClassId = "research" | "poetry" | "forecasts" | "notes";
+export type ClassId = "research" | "poetry" | "forecasts" | "notes" | "quests";

@@ -1,6 +1,6 @@
 # hatimej.com
 
-A personal catalog. Four classes of work — formal methods, poetry, forecasting, notes —
+A personal catalog. Five classes of work — formal methods, poetry, forecasting, notes, side quests —
 indexed by hand-authored tracings between individual pieces rather than by categories or
 an about page.
 

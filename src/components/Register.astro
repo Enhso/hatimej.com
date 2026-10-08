@@ -6,14 +6,18 @@ interface Props {
     heading: string;
     /** Printed under the heading. One line. */
     gloss?: string;
+    /** 1 when the register is the page itself, as in a drawer; 2 under another heading. */
+    level?: 1 | 2;
 }
 
-const { entries, heading, gloss } = Astro.props;
+const { entries, heading, gloss, level = 2 } = Astro.props;
+const Heading = level === 1 ? "h1" : "h2";
+const CardHeading = level === 1 ? "h2" : "h3";
 ---
 
 <section class="register" aria-labelledby="register-heading">
     <header class="banner">
-        <h2 class="signage" id="register-heading">{heading}</h2>
+        <Heading class="heading signage" id="register-heading">{heading}</Heading>
         {gloss && <p class="gloss">{gloss}</p>}
     </header>
 
@@ -35,9 +39,9 @@ const { entries, heading, gloss } = Astro.props;
                         </div>
 
                         <div class="body">
-                            <h3 class="title">
-                                <a href={entry.href}>{entry.title}</a>
-                            </h3>
+                            <CardHeading class="title">
+                                <a href={entry.href} lang={entry.lang}>{entry.title}</a>
+                            </CardHeading>
 
                             <p class="statement">
                                 {entry.klass.label}. — {accession(entry.date, entry.circa)}.
@@ -45,6 +49,11 @@ const { entries, heading, gloss } = Astro.props;
                             </p>
 
                             {entry.summary && <p class="summary">{entry.summary}</p>}
+                            {entry.incipit && (
+                                <p class="summary incipit" lang={entry.lang}>
+                                    {entry.incipit}
+                                </p>
+                            )}
 
                             <p class="tracings">
                                 <span class="tracings-label signage">Tracings</span>
@@ -52,20 +61,32 @@ const { entries, heading, gloss } = Astro.props;
                                     <span class="tracings-none">none recorded</span>
                                 ) : (
                                     entry.tracings.map((tracing, index) => (
-                                        <a
-                                            class:list={[
-                                                "tracing",
-                                                { annotated: tracing.note !== undefined },
-                                            ]}
-                                            href={tracing.target.href}
-                                            data-class={tracing.target.klass.id}
-                                            data-target-ref={tracing.target.ref}
-                                            title={tracing.note ?? tracing.target.title}
-                                            aria-label={`${tracing.target.callNumber}, ${tracing.target.title}, ${tracing.target.klass.label}`}
-                                        >
-                                            <span class="tracing-numeral">{numeral(index)}.</span>
-                                            <span class="call">{tracing.target.callNumber}</span>
-                                        </a>
+                                        <Fragment>
+                                            <a
+                                                class:list={[
+                                                    "tracing",
+                                                    { annotated: tracing.note !== undefined },
+                                                ]}
+                                                href={tracing.target.href}
+                                                data-class={tracing.target.klass.id}
+                                                data-target-ref={tracing.target.ref}
+                                                title={tracing.note ?? tracing.target.title}
+                                                aria-label={`${tracing.target.callNumber}, ${tracing.target.title}, ${tracing.target.klass.label}`}
+                                                aria-describedby={
+                                                    tracing.note !== undefined
+                                                        ? `${entry.callNumber}-note-${index}`
+                                                        : undefined
+                                                }
+                                            >
+                                                <span class="tracing-numeral">{numeral(index)}.</span>
+                                                <span class="call">{tracing.target.callNumber}</span>
+                                            </a>
+                                            {tracing.note !== undefined && (
+                                                <span class="vh" id={`${entry.callNumber}-note-${index}`}>
+                                                    {tracing.note}
+                                                </span>
+                                            )}
+                                        </Fragment>
                                     ))
                                 )}
                             </p>
@@ -92,7 +113,7 @@ const { entries, heading, gloss } = Astro.props;
         border-block-end: var(--rule-heavy);
     }
 
-    h2 {
+    .heading {
         margin: 0;
         font-size: clamp(1.25rem, 3.2vw, 1.75rem);
         font-weight: 800;
@@ -169,6 +190,12 @@ const { entries, heading, gloss } = Astro.props;
         line-height: calc(var(--u) * 2.4);
         color: var(--ink);
         max-width: 58ch;
+    }
+
+    /* A poem's card carries its opening lines, broken where the poem breaks. */
+    .incipit {
+        white-space: pre-line;
+        max-width: 52ch;
     }
 
     /* The tracings line always prints, empty or not. The catalog does not

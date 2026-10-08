@@ -1,6 +1,7 @@
 ---
 title: "la misère du pois terne"
 date: 2023-02-24
+lang: fr
 ---
 
 <pre class="verse">

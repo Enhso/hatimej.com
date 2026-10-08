@@ -14,6 +14,7 @@ colors:
   tab-poetry: "#7a2e6d"
   tab-forecasts: "#8a4e00"
   tab-notes: "#1f6b4a"
+  tab-quests: "#00657a"
   stock-negative: "#131416"
   stock-lit-negative: "#1b1d20"
   stock-sunk-negative: "#0d0e10"
@@ -26,6 +27,7 @@ colors:
   tab-poetry-negative: "#c98bc0"
   tab-forecasts-negative: "#e0a040"
   tab-notes-negative: "#57ba8c"
+  tab-quests-negative: "#4cc3d9"
 typography:
   display:
     fontFamily: "Libre Franklin Variable, Libre Franklin, Helvetica Neue, Arial, sans-serif"
@@ -188,13 +190,14 @@ matched darkness so no drawer outranks another.
 
 ### Secondary
 
-The four guide-tab colours, one per class in the schedule. Each is set near 43–49% lightness in
-the positive and near 70% in the negative, so all four read as peers on the same tab strip.
+The guide-tab colours, one per class in the schedule. Each is set near 43–49% lightness in
+the positive and near 70% in the negative, so all of them read as peers on the same tab strip.
 
 - **Schedule Blue** (`tab-research`): Formal methods, class mark R.
 - **Schedule Plum** (`tab-poetry`): Poetry, class mark P.
 - **Schedule Tobacco** (`tab-forecasts`): Forecasting, class mark F.
 - **Schedule Viridian** (`tab-notes`): Notes, class mark N.
+- **Schedule Teal** (`tab-quests`): Side quests, class mark Q.
 
 ### Neutral
 
@@ -393,7 +396,9 @@ underline instead.
 - **Internal Padding:** 2.4u block, zero inline — the record's edges are the field's edges.
 - **Anatomy:** Call number in the rail; title in signage at 17px/600; a statement line giving the
   class label and the accession date in ISO form; an optional summary in the reading face at
-  15px; and always, last, the tracings line above its own hairline rule.
+  15px, or on a verse record its opening lines in the same face, broken where the poem breaks
+  (the first stanza of more than one line, at most four lines); and always, last, the tracings
+  line above its own hairline rule.
 
 ### Tracings and Crossings (signature)
 
@@ -417,8 +422,8 @@ anchor and every record still reads.
   which is the system-wide focus treatment on every focusable element.
 - **Error:** Native constraint validation, with the message "No record carries that call number."
 - **Availability:** The field is `display: none` until the enhancement script marks the document
-  ready. A control that cannot work never renders; the register on the front is the full index
-  without it.
+  ready. A control that cannot work never renders; the front prints only the seven newest cards,
+  and the drawers are the full index without it.
 
 ### Theme Toggle (button)
 
@@ -451,10 +456,14 @@ state — the pulled state changes colour and weight, never alpha.
 catalog does not pretend to a completeness it lacks, and the bare case is the designed case, not
 the degraded one.
 
-**The Flick Rule.** Cards are flicked, not eased. State changes are hard cuts: 90ms on
-`steps(2, end)`, which is a two-frame register shift, not a fade. No transitions on grounds, no
-float-ins, no scroll reveals, no entrance animation of any kind. Under reduced motion every
-transition and animation drops to 0ms.
+**The Flick Rule.** Cards are flicked, not eased. Every motion is stop-motion: held frames on
+`steps()`, never a fade, an opacity ramp or an eased curve. State changes are two-frame register
+shifts (90ms on `steps(2, end)`). Motion is allowed to play, in the catalog's own idiom: the
+first page of a session opens the drawer (tabs flick up, the heading is typed, figures are
+stamped, connectors are drawn), records pop in as they scroll into view, and marks pop up
+under the pointer. Nothing is ever pre-hidden to wait for motion; every animation ends on the
+static state. Under reduced motion every transition and animation drops to 0ms. All of it
+lives in `src/styles/motion.css` and `src/scripts/motion.ts`.
 
 ## Do's and Don'ts
 
@@ -486,8 +495,8 @@ transition and animation drops to 0ms.
 - **Don't** let a class colour into body text, into a prose background, or into a position where
   it is the only thing carrying a fact.
 - **Don't** use opacity to express weight, state or hierarchy. Change the colour or the rule.
-- **Don't** animate an entrance. No fades, no float-ins, no scroll reveals; state changes are
-  hard cuts under 120ms.
+- **Don't** ease or fade anything. Entrances and pops are held frames; a single animation
+  stays under 300ms, and the session's opening under two seconds.
 - **Don't** introduce a fourth rule weight, a fourth ground value, or a second spacing scale.
 - **Don't** set prose in the monospace or headings in the serif.
 - **Don't** design anything that assumes annotations exist. A catalog of entirely bare tracings

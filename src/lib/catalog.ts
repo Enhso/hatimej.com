@@ -26,6 +26,10 @@ export interface Entry {
     /** True when only the date's year is known; it prints as `c. YYYY`. */
     circa: boolean;
     summary?: string;
+    /** Opening lines of a verse record, printed on its card in place of a note. */
+    incipit?: string;
+    /** Language of the piece when it is not English. */
+    lang?: string;
     /** Where the piece was first published, when it appeared elsewhere first. */
     source?: string;
     placeholder: boolean;
@@ -77,6 +81,36 @@ function compareByDate(a: { date: Date }, b: { date: Date }): number {
     return a.date.getTime() - b.date.getTime();
 }
 
+/** Lines of a poem a card may carry. */
+const INCIPIT_LINES = 4;
+
+/**
+ * The opening lines of a verse record, transcribed for its card.
+ *
+ * Takes the first stanza of more than one line, so a lone heading or glyph set
+ * above a poem is passed over, and stops after four lines.
+ *
+ * @param body - The record's Markdown source.
+ * @returns The opening lines, or undefined when the record holds no verse.
+ */
+function incipit(body: string | undefined): string | undefined {
+    const verse = body?.match(/<pre class="verse">([\s\S]*?)<\/pre>/)?.[1];
+    if (verse === undefined) {
+        return undefined;
+    }
+    const text = verse
+        .replaceAll("&lt;", "<")
+        .replaceAll("&gt;", ">")
+        .replaceAll("&quot;", '"')
+        .replaceAll("&amp;", "&");
+    const stanza = text
+        .trim()
+        .split(/\n\s*\n/)
+        .map((block) => block.split("\n"))
+        .find((lines) => lines.length > 1);
+    return stanza?.slice(0, INCIPIT_LINES).join("\n");
+}
+
 /**
  * Read every collection, assign call numbers, and resolve the tracing apparatus.
  *
@@ -107,6 +141,8 @@ export async function loadCatalog(): Promise<Catalog> {
                 date: item.data.date,
                 circa: item.data.circa,
                 summary: item.data.summary,
+                incipit: incipit(item.body),
+                lang: item.data.lang,
                 source: item.data.source,
                 placeholder: item.data.placeholder,
                 klass,

@@ -25,7 +25,8 @@ const crossing = entries.reduce(
 <Catalog title={klass.heading} klass={klass.id} description={`${klass.label} in the catalog of ${entries.length} records.`}>
     <Register
         entries={entries}
+        level={1}
         heading={klass.heading}
-        gloss={`${entries.length} ${entries.length === 1 ? "record" : "records"} in this drawer, ${crossing} of their tracings leaving the class.`}
+        gloss={`${entries.length} ${entries.length === 1 ? "card" : "cards"} in here, ${crossing === 0 ? "no" : crossing} red ${crossing === 1 ? "string" : "strings"} leading out.`}
     />
 </Catalog>

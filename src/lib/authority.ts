@@ -36,26 +36,22 @@ export const AUTHORITY: AuthorityField[] = [
     {
         tag: "100",
         label: "Established heading",
-        lines: [{ text: "El Jazouli, Hatim" }],
+        lines: [{ text: "El Jazouli, Hatim, 1996–" }],
     },
     {
         tag: "400",
         label: "Variant forms",
-        lines: [
-            { text: "Hatim El Jazouli" },
-            { text: "H. El Jazouli" },
-            { text: "Owm (Substack)" },
-        ],
+        lines: [{ text: "Hatim El Jazouli" }, { text: "H. El Jazouli" }],
     },
     {
         tag: "680",
         label: "Summary",
         lines: [
             {
-                text: "Data scientist and Metaculus forecaster (top 2%, 100+ resolved questions) with hands-on experience building and evaluating systems under uncertainty: an ensemble LLM forecasting bot combining diverse model personas into scored, judgmental predictions; the Context Tree Switching algorithm implemented from scratch for sequential-prediction research; and financial time-series models (XGBoost, Hull Tactical competition) evaluated against real market outcomes. Currently applying quantitative methods to receivables analysis and reconciliation at OCP Group.",
+                text: "I do my best work alone, in long uninterrupted stretches, on questions nobody has tidied up yet. I’d rather be wrong in a way I can measure than right in a way I can’t.",
             },
             {
-                text: "Comfortable taking apart systems I didn’t build, stating uncertainty explicitly, and treating a wrong answer as data rather than noise. Fluent in Python; working knowledge of Rust; cross-domain research background (metagenomics, causal gene regulatory networks) that trained me to work fast inside domains I don’t start out knowing.",
+                text: "Forecasting keeps score of how often I’m wrong, and for now the score says top forecaster. Next stop is formal methods, where checking is the whole job. Early days. I’m enjoying the road.",
             },
         ],
     },
@@ -64,10 +60,10 @@ export const AUTHORITY: AuthorityField[] = [
         label: "Field of activity",
         lines: [
             { text: "Data science" },
-            { text: "Forecasting under uncertainty" },
-            { text: "Machine learning research" },
-            { text: "Bioinformatics" },
-            { text: "Poetry and photography" },
+            { text: "Forecasting" },
+            { text: "Formal methods (just getting started)" },
+            { text: "Bioinformatics (retired, mostly)" },
+            { text: "Essays and poems, in English and French" },
         ],
     },
     {
@@ -75,23 +71,23 @@ export const AUTHORITY: AuthorityField[] = [
         label: "Occupation",
         lines: [
             {
-                text: "Data Analyst Intern, OCP Group, Casablanca. Quantitative methods for receivables analysis and reconciliation.",
-                when: "2026 – present",
+                text: "Data Analyst Intern, OCP Group, Casablanca. Went hunting for unpaid debt in the phosphate rock business. Most of it looked like credits nobody had matched.",
+                when: "2026",
             },
             {
-                text: "Data Engineer Intern, Eurafric Information, Casablanca. A complete data engineering pipeline from ingestion to serving in a pseudo-distributed environment, with Airflow orchestrating five data processing tools.",
+                text: "Data Engineer Intern, Eurafric Information, Casablanca. Built a data pipeline end to end and got five tools to take turns, with Airflow as the referee.",
                 when: "2025",
             },
             {
-                text: "Researcher & Artist, Independent, Paris. Five interdisciplinary research proposals (theoretical ecology, biophysics, nutrition, agronomy, geography) synthesising 50+ publications, and 30+ original creative works in poetry, photography and sketches.",
+                text: "Researcher & Artist, Independent, Paris. Wandered through ecology, biophysics, nutrition, agronomy and geography, writing a research proposal in each. Made thirty-odd poems, photographs and drawings along the way.",
                 when: "2020 – 2024",
             },
             {
-                text: "Data Scientist Intern, Pitié-Salpêtrière University Hospital, Paris. An R pipeline preprocessing 10 GB+ of autoimmune patient metagenomic data, and exploratory analysis to identify biomarkers, contributing to one published clinical study.",
+                text: "Data Scientist Intern, Pitié-Salpêtrière University Hospital, Paris. Sifted 10 GB of microbial DNA from autoimmune patients for biomarkers. The digging ended up in a published clinical study.",
                 when: "2019 – 2020",
             },
             {
-                text: "Bioinformatician Intern, Institute of Biology of the École normale supérieure, Paris. Statistical tools integrated into a workflow engine, with unit tests, for scRNA-seq reproducibility, and statistical analysis of gene expression in immunological cell types.",
+                text: "Bioinformatician Intern, Institute of Biology of the École normale supérieure, Paris. Taught a workflow engine some statistics, with unit tests, so single-cell analyses come out the same twice.",
                 when: "2018 – 2019",
             },
         ],
@@ -105,7 +101,7 @@ export const AUTHORITY: AuthorityField[] = [
                 when: "2024 – 2027",
             },
             {
-                text: "Master in Bioinformatics, University of Rouen. Left during the final semester.",
+                text: "Master’s in Bioinformatics, University of Rouen. Left one semester short.",
                 when: "2017 – 2020",
             },
             {
@@ -113,7 +109,7 @@ export const AUTHORITY: AuthorityField[] = [
                 when: "2014 – 2017",
             },
             {
-                text: "Independent coursework includes Bayesian Data Analysis (Aalto); Topological Data Analysis (Spanish Topology Network); Data Compression With and Without Deep Probabilistic Models (Tübingen); Algorithmic Game Theory (Stanford); Real Analysis (Harvey Mudd); Linear Algebra Done Right (U. Washington); Applied Category Theory (MIT); Theory of Computation (MIT); Introduction to AI Safety, Ethics & Society (Center for AI Safety); Biosecurity (BlueDot Impact).",
+                text: "On the side: Theory of Computation (MIT), Applied Category Theory (MIT), Real Analysis (Harvey Mudd), Linear Algebra Done Right (U. Washington).",
             },
         ],
     },
@@ -123,19 +119,20 @@ export const AUTHORITY: AuthorityField[] = [
         lines: [
             { text: "French (native)" },
             { text: "English (fluent)" },
-            { text: "Arabic (fluent)" },
-            { text: "Spanish (intermediate)" },
+            { text: "Darija (fluent)" },
+            { text: "Modern Standard Arabic (understand most of it)" },
+            { text: "Spanish (getting there)" },
         ],
     },
     {
         tag: "368",
         label: "Programming and tools",
         lines: [
-            { text: "Advanced: Python, R, SQL" },
-            { text: "Intermediate: C, Rust, Perl" },
-            { text: "Beginner: Java, OCaml, Julia" },
+            { text: "Fluent: Python, R, SQL" },
+            { text: "Conversational: C, Rust, Perl" },
+            { text: "Can order a coffee: Java, OCaml, Julia" },
             {
-                text: "Tools: Claude Code, Git, Docker, Jupyter, Polars, scikit-learn, PyTorch, TensorFlow",
+                text: "Toolbox: Polars, SQLite, Airflow, scikit-learn, PyTorch, XGBoost, Streamlit, Git, Docker, GitHub Actions, Claude Code",
             },
         ],
     },
@@ -143,19 +140,12 @@ export const AUTHORITY: AuthorityField[] = [
         tag: "370",
         label: "Associated place",
         lines: [
-            { text: "Casablanca, Morocco" },
+            { text: "Casablanca, Morocco", when: "1996 – 2014" },
+            { text: "Tours, France", when: "2014 – 2017" },
+            { text: "Rouen, France", when: "2017 – 2020" },
             { text: "Paris, France", when: "2018 – 2024" },
-        ],
-    },
-    {
-        tag: "670",
-        label: "Source data found",
-        lines: [
-            {
-                text: "Metaculus: top 2%, 100+ resolved questions",
-                href: "https://www.metaculus.com/accounts/profile/198568/",
-            },
-            { text: "Curriculum vitae, August 2026" },
+            { text: "Casablanca, Morocco", when: "2023 – now" },
+            { text: "The open interval (0, 1)", when: "always" },
         ],
     },
 ];

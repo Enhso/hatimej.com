@@ -1,6 +1,7 @@
 ---
 title: "Vers sommeliers"
 date: 2023-02-17
+lang: fr
 ---
 
 <pre class="verse">

@@ -53,7 +53,8 @@ corpus of authored relations, which only accumulates by hand.
 ## Capabilities and Constraints
 
 - **Four content types at launch**: formal methods research, poetry, forecasting, journal-style notes.
-  Flat structure, no hierarchical taxonomy, no tag system at launch.
+  Flat structure, no hierarchical taxonomy, no tag system at launch. A fifth, side quests, was added in
+  October 2026 for work that fits no other drawer.
 - **A fifth surface**: a CV page, built inside the same system rather than as an attached document.
   Confirmed by the principal as necessary for the graduate-admissions audience.
 - **Link model**: links are hand-authored per piece and point at other pieces. Annotation is optional —
@@ -71,10 +72,13 @@ corpus of authored relations, which only accumulates by hand.
 
 - Published under the principal's full name, with a public email address, both required for the
   graduate-admissions audience to treat the identity as searchable and contactable.
-- **Binding visual constraint stated by the principal**: the design register must itself read as formal
-  methods — systematic, precise, strongly gridded, typographically driven, restrained in ornament. It is
-  explicitly not warm or personal, and explicitly not minimal-quiet. This is a constraint on the visual
-  world, recorded here because the principal made it binding, not expanded into a direction.
+- **Binding visual constraint stated by the principal**: the grid must itself read as formal methods —
+  systematic, precise, strongly gridded, typographically driven, restrained in ornament, and explicitly
+  not minimal-quiet.
+- **Voice and play, stated by the principal (October 2026)**: the site is laidback. Copy shows rather
+  than tells: it never explains the catalog conceit, and the authority record must not read like a CV.
+  Motion may be playful (an opening once per session, things popping in and out) in the stop-motion
+  idiom of DESIGN.md's Flick Rule. This replaces the earlier "not warm or personal" constraint.
 
 ## Evidence on Hand
 
