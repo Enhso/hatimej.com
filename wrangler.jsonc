@@ -2,6 +2,7 @@
   "name": "hatimej-com",
   "main": "worker.js",
   "compatibility_date": "2026-09-10",
+  "workers_dev": false,
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
