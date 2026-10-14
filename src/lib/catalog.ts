@@ -1,8 +1,12 @@
+import { execSync } from "node:child_process";
 import { getCollection, type CollectionEntry } from "astro:content";
 import { CLASSES, classOf, type CatalogClass, type ClassId } from "./classes";
 
 /** The first call number issued in each class. */
 const FIRST_CALL_NUMBER = 101;
+
+/** The date of the newest commit, read once per build. */
+const LAST_COMMIT = new Date(execSync("git log -1 --format=%cI").toString().trim());
 
 /** One resolved tracing: a pointer that survived draft filtering. */
 export interface ResolvedTracing {
@@ -55,8 +59,8 @@ export interface Catalog {
     traffic: Traffic;
     /** True when any record in the build is still illustrative. */
     provisional: boolean;
-    /** The most recent entry, kept whole so its `circa` flag survives to print. */
-    lastAccession?: Entry;
+    /** When the catalog last changed: the date of the newest commit. */
+    lastAccession: Date;
 }
 
 /** One cross-class tracing, flattened for printing on the cross-reference card. */
@@ -192,7 +196,7 @@ export async function loadCatalog(): Promise<Catalog> {
         crossings,
         traffic: tabulate(entries),
         provisional: entries.some((entry) => entry.placeholder),
-        lastAccession: entries[0],
+        lastAccession: LAST_COMMIT,
     };
 }
 
